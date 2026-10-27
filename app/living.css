@@ -1,0 +1,2566 @@
+/* =========================================================
+   "Living Control Plane" layer
+   Hero visualization, signal lines, gold acknowledgment,
+   nav active indicator, touch equivalents, touch targets.
+   Loaded after globals.css; only adds or overrides.
+   ========================================================= */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --gold-line: rgba(0, 194, 255, 0.9);
+  --plane-border: rgba(207, 232, 250, 0.22);
+}
+
+/* ---------- Hero shell ---------- */
+.lp-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-top: calc(var(--header-h) + 1rem);
+  padding-bottom: 3rem;
+  color: var(--augent-white);
+  /* off-black purple base, not #000; one restrained glow behind the stack */
+  background:
+    radial-gradient(52% 58% at 74% 50%, rgba(0, 194, 255, 0.11), transparent 72%),
+    radial-gradient(38% 42% at 8% 96%, rgba(0, 194, 255, 0.05), transparent 70%),
+    var(--augent-purple-90);
+  overflow: hidden;
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.lp-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  grid-template-areas:
+    "copy viz"
+    "cta  viz";
+  column-gap: 3rem;
+  row-gap: 2.25rem;
+  align-items: center;
+}
+
+.lp-copy {
+  grid-area: copy;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 34rem;
+}
+
+.lp-cta {
+  grid-area: cta;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lp-viz {
+  grid-area: viz;
+  position: relative;
+  min-width: 0;
+}
+
+/* ---------- One-time CTA pulse ---------- */
+.pulse-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  border: 1.5px solid var(--augent-brand-gold);
+  pointer-events: none;
+}
+
+/* ---------- 3D plane stack (desktop) ---------- */
+.stack-stage {
+  --plane: 236px;
+  --depth-step: 71px; /* DEPTH (84) x sin(58deg): screen offset between planes */
+  position: relative;
+  height: 410px;
+  perspective: 1500px;
+  perspective-origin: 38% 45%;
+}
+
+.stack-tilt {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.stack-iso {
+  position: absolute;
+  left: 36%;
+  top: 50%;
+  width: var(--plane);
+  height: var(--plane);
+  margin: calc(var(--plane) / -2) 0 0 calc(var(--plane) / -2);
+  transform: rotateX(58deg) rotateZ(45deg);
+  transform-style: preserve-3d;
+}
+
+.plane-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  border: 1px solid var(--plane-border);
+  background: linear-gradient(135deg, rgba(52, 60, 72, 0.42), rgba(18, 20, 23, 0.66));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.plane-layer.l0 {
+  background: linear-gradient(135deg, rgba(58, 66, 78, 0.44), rgba(38, 44, 52, 0.6));
+}
+
+.plane-layer.l2 {
+  background: linear-gradient(135deg, rgba(40, 46, 54, 0.5), rgba(18, 20, 23, 0.74));
+}
+
+.plane-layer.is-active {
+  border-color: rgba(0, 194, 255, 0.75);
+  background: linear-gradient(135deg, rgba(0, 110, 150, 0.6), rgba(26, 29, 33, 0.72));
+}
+
+.plane-layer svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.plane-layer path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trace-idle path {
+  stroke: rgba(0, 194, 255, 0.26);
+  stroke-width: 1;
+}
+
+.trace-live path {
+  stroke: var(--augent-brand-gold);
+  stroke-width: 1.6;
+}
+
+.trace-pads rect {
+  fill: rgba(0, 194, 255, 0.3);
+  transition: fill 0.3s var(--ease-out);
+}
+
+.trace-pads.on rect {
+  fill: var(--augent-brand-gold);
+}
+
+/* soft floor shadow so the stack sits on something */
+.stack-shadow {
+  position: absolute;
+  left: 36%;
+  top: calc(50% + var(--depth-step) + 72px);
+  width: 360px;
+  height: 70px;
+  margin-left: -180px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* labels: 2D, anchored next to each plane's right corner */
+.stack-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.stack-label {
+  position: absolute;
+  left: calc(36% + var(--plane) * 0.76 + 1.25rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+  padding: 0.35rem 0.75rem 0.35rem 1.6rem;
+  color: rgba(255, 255, 255, 0.72);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(-50%);
+  transition: color 0.25s var(--ease-out), translate 0.25s var(--ease-out);
+}
+
+.stack-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 14px;
+  height: 1px;
+  background: rgba(0, 194, 255, 0.45);
+  transform-origin: left;
+  transition: transform 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
+}
+
+.stack-label.lbl0 {
+  top: calc(50% - var(--depth-step));
+}
+.stack-label.lbl1 {
+  top: 50%;
+}
+.stack-label.lbl2 {
+  top: calc(50% + var(--depth-step));
+}
+
+.stack-label-title {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.stack-label-tag {
+  font-size: 0.8rem;
+  color: rgba(232, 244, 255, 0.6);
+  white-space: nowrap;
+  transition: color 0.25s var(--ease-out);
+}
+
+.stack-label.is-active {
+  color: var(--augent-white);
+  translate: 4px 0;
+}
+
+.stack-label.is-active::before {
+  background: var(--augent-brand-gold);
+  transform: scaleX(1.25);
+}
+
+.stack-label.is-active .stack-label-tag {
+  color: var(--augent-brand-gold);
+}
+
+/* readout: one line of the hovered plane's description */
+.plane-readout {
+  position: relative;
+  max-width: 31rem;
+  min-height: 4.9rem;
+  margin: 0.25rem 0 0 8%;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(0, 194, 255, 0.45);
+}
+
+.readout-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--augent-brand-gold);
+  margin-bottom: 0.3rem;
+}
+
+.readout-title span {
+  margin-left: 0.5rem;
+  font-weight: 400;
+  color: rgba(232, 244, 255, 0.65);
+}
+
+.readout-text {
+  font-size: 0.98rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.readout-text.idle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Mobile plane carousel ---------- */
+.viz-mobile {
+  display: none;
+}
+
+.plane-carousel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.25rem;
+  padding: 0.25rem 1.25rem 0.75rem;
+  margin: 0 -1.25rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.plane-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.plane-card {
+  position: relative;
+  flex: 0 0 84%;
+  scroll-snap-align: center;
+  border-radius: 16px;
+  border: 1px solid var(--plane-border);
+  background: linear-gradient(150deg, rgba(52, 60, 72, 0.5), rgba(18, 20, 23, 0.82));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plane-card.is-open {
+  border-color: rgba(0, 194, 255, 0.7);
+}
+
+.plane-card-head {
+  display: grid;
+  grid-template-columns: 56px 1fr 24px;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 92px;
+  padding: 1rem;
+  color: var(--augent-white);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+.plane-glyph svg {
+  display: block;
+  width: 56px;
+  height: 56px;
+}
+
+.glyph-off {
+  fill: rgba(52, 60, 72, 0.35);
+  stroke: rgba(207, 232, 250, 0.45);
+  stroke-width: 1;
+}
+
+.glyph-on {
+  fill: rgba(0, 194, 255, 0.22);
+  stroke: var(--augent-brand-gold);
+  stroke-width: 1.2;
+}
+
+.plane-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.plane-card-title {
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.plane-card-tag {
+  font-size: 0.85rem;
+  color: rgba(232, 244, 255, 0.75);
+}
+
+.plane-card-caret {
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.plane-card.is-open .plane-card-caret {
+  transform: rotate(180deg);
+  color: var(--augent-brand-gold);
+}
+
+.plane-card-body {
+  overflow: hidden;
+}
+
+.plane-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0 1rem 1.15rem;
+}
+
+.plane-card-inner p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.carousel-progress {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 0.4rem;
+}
+
+.carousel-progress span {
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: width 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
+}
+
+.carousel-progress span.on {
+  width: 30px;
+  background: var(--augent-brand-gold);
+}
+
+/* ---------- Hero responsive ---------- */
+@media (max-width: 1180px) {
+  .stack-stage {
+    --plane: 200px;
+    --depth-step: 64px;
+    height: 360px;
+  }
+  .stack-iso,
+  .stack-shadow {
+    left: 29%;
+  }
+  .stack-label {
+    left: calc(29% + var(--plane) * 0.74 + 0.75rem);
+  }
+  .stack-label-title {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .lp-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "copy" "viz" "cta";
+    row-gap: 1.5rem;
+  }
+  .lp-copy {
+    align-self: start;
+    max-width: 40rem;
+  }
+  .stack-iso,
+  .stack-shadow {
+    left: 40%;
+  }
+  .stack-label {
+    left: calc(40% + var(--plane) * 0.76 + 1rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .lp-hero {
+    align-items: center;
+    padding-top: calc(var(--header-h) + 1.5rem);
+    padding-bottom: 2.5rem;
+  }
+  .lp-copy {
+    text-align: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+  .lp-cta {
+    justify-content: center;
+  }
+  .viz-desktop {
+    display: none;
+  }
+  .viz-mobile {
+    display: block;
+  }
+}
+
+@media (max-width: 479px) {
+  .lp-cta {
+    flex-direction: column;
+  }
+}
+
+/* ---------- Gold signal lines ---------- */
+.signal-line {
+  --signal: var(--augent-gold-60);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 9px;
+  margin-bottom: 2.75rem;
+  pointer-events: none;
+}
+
+.signal-line.on-dark {
+  --signal: var(--augent-brand-gold);
+}
+
+.signal-track {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--signal) 22%, var(--signal));
+  transform-origin: left center;
+}
+
+.signal-node {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--signal);
+  background: transparent;
+}
+
+.signal-node.complete {
+  background: var(--signal);
+}
+
+/* ---------- Gold acknowledgment (200-300ms) ---------- */
+/* zero specificity: never overrides an element's own positioning */
+:where([data-ack]) {
+  position: relative;
+}
+
+[data-ack]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1.5px var(--augent-brand-gold), 0 0 0 1px rgba(0, 194, 255, 0.35);
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-ack].ack-on::after {
+  animation: gold-ack 280ms var(--ease-out);
+}
+
+@keyframes gold-ack {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.flip-card {
+  border-radius: 1rem;
+}
+
+/* architecture hosts the second particle field */
+.architecture {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ---------- Nav active indicator ---------- */
+.nav-link {
+  position: relative;
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 18px;
+  height: 2px;
+  margin-left: -9px;
+  border-radius: 2px;
+  background: var(--augent-brand-gold);
+  pointer-events: none;
+}
+
+.mobile-menu .nav-indicator {
+  bottom: 12px;
+  width: 24px;
+  margin-left: -12px;
+}
+
+.mobile-menu .nav-link.is-active {
+  color: var(--augent-brand-purple);
+}
+
+/* ---------- Touch: hover equivalents (tap toggles, long-press holds) ---------- */
+@media (hover: none) {
+  .problem-card,
+  .cap-card,
+  .why-card,
+  .flip-card,
+  .plane-tab {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .problem-card.touch-hover,
+  .problem-card:active {
+    translate: 0 -5%;
+    box-shadow: 0 24px 40px -24px rgba(26, 29, 33, 0.45);
+  }
+  .problem-card.touch-hover .risk-bg,
+  .problem-card:active .risk-bg {
+    transform: translateY(0) scale(1.05);
+  }
+  .problem-card.touch-hover h3,
+  .problem-card.touch-hover p,
+  .problem-card:active h3,
+  .problem-card:active p {
+    color: var(--augent-white);
+  }
+
+  .cap-card.touch-hover,
+  .cap-card:active {
+    translate: 0 -6px;
+    box-shadow: 0 24px 40px -20px rgba(52, 60, 72, 0.55);
+  }
+
+  .why-card.touch-hover,
+  .why-card:active {
+    color: var(--augent-brand-purple);
+    scale: 1.02;
+  }
+
+  .plane-tab:active {
+    transform: translateY(-3px);
+  }
+
+  .industry-tab:active {
+    background-color: var(--augent-purple-light);
+    color: var(--augent-white);
+  }
+}
+
+/* ---------- Touch targets: 48px minimum on coarse pointers ---------- */
+@media (pointer: coarse) {
+  .industry-tab {
+    min-height: 48px;
+    padding: 12px 18px;
+  }
+  .footer-social a {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  .footer-legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 0.5rem;
+  }
+  .form-checkbox {
+    min-height: 48px;
+  }
+  .form-checkbox input {
+    width: 22px;
+    height: 22px;
+  }
+  .form-checkbox a {
+    display: inline-block;
+    padding: 0.4rem 0;
+  }
+  .solution-left .cta-btn,
+  .cta-btn {
+    min-height: 48px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-ack].ack-on::after {
+    animation: none;
+  }
+  .stack-label,
+  .plane-layer {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   Hero background: pointer-parallax depth field
+   (components/hero/HeroBackground.tsx)
+   Behind everything in .lp-hero, never interactive.
+   ========================================================= */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1400px;
+  perspective-origin: 60% 50%;
+}
+
+.hb-layer {
+  position: absolute;
+  inset: -64px; /* bleed so 40px of travel + tilt never reveals an edge */
+  will-change: transform;
+}
+
+/* 0. light that follows the cursor */
+.hb-glow {
+  position: absolute;
+  left: 58%;
+  top: 48%;
+  width: 70vmax;
+  height: 70vmax;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 110, 190, 0.26), rgba(52, 60, 72, 0.08) 38%, transparent 66%);
+}
+
+/* 1. deepest: grid + circuit traces */
+.hb-grid {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(ellipse 72% 68% at 62% 50%, #000 18%, transparent 78%);
+  mask-image: radial-gradient(ellipse 72% 68% at 62% 50%, #000 18%, transparent 78%);
+}
+
+.hb-grid pattern path {
+  stroke: rgba(120, 140, 160, 0.16);
+  stroke-width: 1;
+}
+
+.hb-traces path {
+  fill: none;
+  stroke: rgba(0, 150, 220, 0.24);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+/* 2. mid: constellation + gold specks */
+.hb-constellation {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: hb-drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.hb-edges line {
+  stroke: rgba(207, 232, 250, 0.1);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.hb-nodes circle {
+  fill: rgba(0, 194, 255, 0.5);
+}
+
+.hb-halos circle {
+  fill: none;
+  stroke: rgba(0, 194, 255, 0.16);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+@keyframes hb-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(14px, -10px, 0);
+  }
+}
+
+/* 3. near: streaks + plane outlines */
+.hb-streak {
+  position: absolute;
+  height: 1px;
+  rotate: -24deg;
+  background: linear-gradient(90deg, transparent, rgba(0, 194, 255, 0.3) 50%, transparent);
+}
+
+.hb-streak.s1 {
+  width: 34vw;
+  left: 6%;
+  top: 20%;
+}
+
+.hb-streak.s2 {
+  width: 26vw;
+  left: 56%;
+  top: 82%;
+  background: linear-gradient(90deg, transparent, rgba(207, 232, 250, 0.2) 50%, transparent);
+}
+
+.hb-streak.s3 {
+  width: 18vw;
+  left: 80%;
+  top: 16%;
+  opacity: 0.7;
+}
+
+.hb-outline {
+  position: absolute;
+  border: 1px solid rgba(207, 232, 250, 0.11);
+  border-radius: 14px;
+  transform: rotateX(58deg) rotateZ(45deg); /* same angle as the plane stack */
+}
+
+.hb-outline.o1 {
+  width: 120px;
+  height: 120px;
+  left: 7%;
+  top: 72%;
+}
+
+.hb-outline.o2 {
+  width: 76px;
+  height: 76px;
+  left: 90%;
+  top: 44%;
+  border-color: rgba(0, 194, 255, 0.14);
+}
+
+/* 4. vignette keeps the edges dark so the stack and copy stay the focus */
+.hb-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 88% 78% at 55% 50%, transparent 55%, rgba(11, 12, 14, 0.72) 100%);
+}
+
+@media (max-width: 767px) {
+  .hb-streak.s3,
+  .hb-outline.o2 {
+    display: none;
+  }
+  .hb-grid {
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 55%, #000 15%, transparent 80%);
+    mask-image: radial-gradient(ellipse 90% 60% at 50% 55%, #000 15%, transparent 80%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hb-constellation {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   Hero copy + buttons: mouse response
+   ========================================================= */
+/* headline: white text with a cursor-following gold light clipped to the glyphs */
+.hero-spot {
+  background-image: linear-gradient(#fff, #fff); /* pre-hydration / touch fallback */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.lp-copy {
+  will-change: transform;
+}
+
+.magnetic {
+  display: inline-flex;
+  will-change: transform;
+}
+
+/* tactile press, mouse and touch alike */
+.lp-cta .cta-btn {
+  transition: gap var(--transition-fast), scale 0.15s var(--ease-out);
+}
+
+.lp-cta .cta-btn:active {
+  scale: 0.97;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-cta .cta-btn:active {
+    scale: 1;
+  }
+}
+
+/* ---------- Signal dots travelling along each plane's traces ---------- */
+.trace-signals .signal-dot {
+  fill: #9BE7FF;
+}
+
+.trace-signals .signal-halo {
+  fill: rgba(0, 194, 255, 0.28);
+}
+
+/* brighter, larger glow on the plane in focus */
+.trace-signals.on .signal-dot {
+  fill: #E8F4FF;
+}
+
+.trace-signals.on .signal-halo {
+  fill: rgba(0, 194, 255, 0.45);
+  r: 4.2;
+}
+
+/* =========================================================
+   Solutions: split-screen pipeline (components/Solutions.tsx)
+   ========================================================= */
+.solutions {
+  /* deep purple, darker toward the top and bottom edges; replaces the photo bg */
+  background: linear-gradient(
+    180deg,
+    #0B0C0E 0%,
+    var(--augent-purple-70) 22%,
+    var(--augent-purple-70) 78%,
+    #0B0C0E 100%
+  );
+}
+
+.pipeline {
+  margin-top: 2.5rem;
+}
+
+/* the hover/focus wrapper carries the two-column grid */
+.pipeline-hover-zone {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: 3rem;
+  align-items: stretch;
+}
+
+/* ---- left: feature list ---- */
+.pipeline-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  border-left: 1px solid rgba(207, 232, 250, 0.14);
+}
+
+.pipeline-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 1rem 1.25rem 1rem 1.75rem;
+  color: rgba(255, 255, 255, 0.62);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  transition: color 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
+}
+
+.pipeline-item:hover {
+  color: rgba(255, 255, 255, 0.92);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.pipeline-item.is-active {
+  color: var(--augent-brand-gold);
+}
+
+.pipeline-item:focus-visible {
+  outline: 2px solid var(--augent-brand-gold);
+  outline-offset: -2px;
+}
+
+.pipeline-item-title {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* the short gold vertical bar, sliding between items */
+.pipeline-bar {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 3px;
+  height: 36px;
+  margin-top: -18px;
+  border-radius: 3px;
+  background: rgba(0, 194, 255, 0.28);
+  overflow: hidden;
+}
+
+/* countdown fill: grows top to bottom until the next flip */
+.pipeline-bar-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--augent-brand-gold);
+  transform-origin: 50% 0%;
+}
+
+/* mobile countdown: thin line inside the active pill (hidden on desktop) */
+.pill-progress {
+  display: none;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 7px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(18, 20, 23, 0.45);
+  transform-origin: 0% 50%;
+}
+
+/* ---- right: content panel ---- */
+.pipeline-panel {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 22rem;
+  padding: 3rem 3rem 3rem 3.25rem;
+  border: 1px solid rgba(207, 232, 250, 0.14);
+  border-radius: 16px;
+  background: rgba(11, 12, 14, 0.28);
+  overflow: hidden;
+}
+
+.pipeline-panel:focus-visible {
+  outline: 2px solid var(--augent-brand-gold);
+  outline-offset: 3px;
+}
+
+.pipeline-watermark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 66%;
+  height: auto;
+  translate: -50% -50%;
+  color: var(--augent-brand-gold);
+  opacity: 0.05;
+  pointer-events: none;
+  animation: au-glow 5s ease-in-out infinite;
+  will-change: opacity;
+}
+
+/* soft gold glow: opacity only, so it stays on the compositor */
+@keyframes au-glow {
+  0%,
+  100% {
+    opacity: 0.05;
+  }
+  50% {
+    opacity: 0.14;
+  }
+}
+
+.pipeline-content {
+  position: relative;
+  max-width: 36rem;
+}
+
+.pipeline-subtitle {
+  margin-bottom: 1.25rem;
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--augent-white);
+}
+
+.pipeline-description {
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ---- tablet ---- */
+@media (max-width: 991px) {
+  .pipeline-hover-zone {
+    gap: 2rem;
+  }
+  .pipeline-item-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1180px) {
+  .pipeline-item-title {
+    font-size: 1.4rem;
+  }
+  .pipeline-panel {
+    padding: 2.25rem;
+  }
+}
+
+/* ---- mobile: pills on top, full-width panel below ---- */
+@media (max-width: 767px) {
+  .pipeline-hover-zone {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .pipeline-list {
+    flex-direction: row;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding: 0.25rem 1.25rem;
+    margin: 0 -1.25rem;
+    border-left: 0;
+    scrollbar-width: none;
+  }
+
+  .pipeline-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pipeline-item {
+    flex: none;
+    min-height: 48px;
+    padding: 0 1.15rem;
+    scroll-snap-align: start;
+    border: 1px solid rgba(207, 232, 250, 0.25);
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .pipeline-item.is-active {
+    background-color: var(--augent-brand-gold);
+    border-color: var(--augent-brand-gold);
+    color: var(--augent-gold-90);
+  }
+
+  .pipeline-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .pipeline-item.is-active:hover {
+    background-color: var(--augent-brand-gold);
+  }
+
+  .pipeline-bar {
+    display: none;
+  }
+
+  .pill-progress {
+    display: block;
+  }
+
+  .pipeline-item-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .pipeline-panel {
+    min-height: 0;
+    padding: 1.75rem 1.5rem 2rem;
+  }
+
+  .pipeline-watermark {
+    width: 92%;
+  }
+
+  .pipeline-subtitle {
+    font-size: 1.35rem;
+  }
+
+  .pipeline-description {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-watermark {
+    animation: none;
+    opacity: 0.07;
+  }
+}
+
+/* =========================================================
+   Core Capabilities: header + uniform card grid
+   (components/CoreCapabilities.tsx, components/capabilities/*)
+   ========================================================= */
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.cap-cell {
+  display: flex; /* lets every card stretch to the row's height */
+}
+
+/* a lone last card sits in the middle column instead of hanging left */
+.cap-cell:last-child:nth-child(3n + 1) {
+  grid-column: 2;
+}
+
+.cap-tile {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.75rem 1.75rem 2rem;
+  color: var(--augent-white);
+  background: linear-gradient(160deg, #23272D 0%, var(--augent-purple-70) 55%, var(--augent-purple-dark) 100%);
+  border: 1px solid rgba(207, 232, 250, 0.14);
+  border-radius: 16px;
+  transition: translate 0.3s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* hover: lift + a soft glowing gold outline (crisp ring, faint halo, depth shadow) */
+.cap-tile:hover,
+.cap-tile.is-hovered {
+  translate: 0 -4px;
+  border-color: rgba(0, 194, 255, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(0, 194, 255, 0.35),
+    0 0 18px 2px rgba(0, 194, 255, 0.22),
+    0 0 42px 6px rgba(0, 194, 255, 0.08),
+    0 22px 40px -26px rgba(52, 60, 72, 0.85);
+}
+
+/* icon well: 72px canvas on a faint gold glow */
+.cap-icon {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 0.35rem;
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.09), transparent 70%);
+  transition: background 0.3s var(--ease-out);
+}
+
+.cap-tile:hover .cap-icon,
+.cap-tile.is-hovered .cap-icon {
+  background: radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.2), transparent 70%);
+}
+
+.cap-icon canvas {
+  display: block;
+  width: 72px;
+  height: 72px;
+}
+
+.cap-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.cap-desc {
+  font-size: 0.97rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.capabilities .section-button {
+  margin-top: 2.5rem;
+}
+
+/* tablet: 2 columns, a lone last card is centred */
+@media (max-width: 991px) {
+  .cap-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cap-cell:last-child:nth-child(3n + 1) {
+    grid-column: auto;
+  }
+  .cap-cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.625rem);
+  }
+}
+
+/* mobile: 1 column */
+@media (max-width: 767px) {
+  .cap-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .cap-cell:last-child:nth-child(odd) {
+    grid-column: auto;
+    width: auto;
+  }
+  .cap-tile {
+    padding: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cap-tile:hover,
+  .cap-tile.is-hovered {
+    translate: none;
+  }
+}
+
+/* ---------- Solutions panel: two-sided flip card ---------- */
+/* the panel becomes the 3D stage; the faces carry the card styling */
+.pipeline-panel.is-flip {
+  display: grid;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: none;
+  overflow: visible;
+  perspective: 1400px;
+}
+
+.pflip-inner {
+  display: grid; /* both faces share one cell: height = the taller face */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.pflip-face {
+  grid-area: 1 / 1;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 22rem;
+  padding: 3rem 3rem 3rem 3.25rem;
+  border: 1px solid rgba(207, 232, 250, 0.14);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(26, 29, 33, 0.6), rgba(11, 12, 14, 0.55));
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.pflip-face.back {
+  transform: rotateY(180deg);
+}
+
+@media (max-width: 991px) {
+  .pflip-face {
+    padding: 2.25rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .pflip-face {
+    min-height: 0;
+    padding: 1.75rem 1.5rem 2rem;
+  }
+}
+
+/* =========================================================
+   Architecture: X-ray / wireframe reveal
+   (components/architecture/ArchitectureXRay.tsx, lib/xrayScene.ts)
+   ========================================================= */
+.xray-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 3rem;
+  align-items: center;
+}
+
+.xray-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.xray-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.xray-heading .heading-title {
+  text-align: left;
+}
+
+.xray-heading p {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.1rem;
+  max-width: 32rem;
+}
+
+/* layer list: the accessible control + full HTML fallback */
+.xray-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid rgba(207, 232, 250, 0.16);
+}
+
+.xray-item > button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: color 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
+}
+
+.xray-item > button::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  background: var(--augent-brand-gold);
+  transition: height 0.25s var(--ease-out), top 0.25s var(--ease-out);
+}
+
+.xray-item > button:hover {
+  color: var(--augent-white);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.xray-item.is-active > button {
+  color: var(--augent-brand-gold);
+  background-color: rgba(0, 194, 255, 0.06);
+}
+
+.xray-item.is-active > button::before {
+  top: 20%;
+  height: 60%;
+}
+
+.xray-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0 1rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s var(--ease-out), opacity 0.25s var(--ease-out), padding 0.3s var(--ease-out);
+}
+
+.xray-item.is-active .xray-tools {
+  max-height: 8rem;
+  opacity: 1;
+  padding: 0.25rem 1rem 0.75rem;
+}
+
+.xray-tools li,
+.xray-callout-tools span {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(207, 232, 250, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.xray-controls {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.xray-ctl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(207, 232, 250, 0.25);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.xray-ctl:hover:not(:disabled),
+.xray-ctl[aria-pressed="true"] {
+  color: var(--augent-brand-gold);
+  border-color: rgba(0, 194, 255, 0.6);
+}
+
+.xray-ctl:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* 3D stage */
+.xray-stage {
+  position: relative;
+  height: 560px;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.xray-stage.is-ready {
+  opacity: 1;
+}
+
+.xray-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y; /* taps pick layers, vertical swipes still scroll */
+}
+
+/* callout under the focused layer (positioned from the scene) */
+.xray-callout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 22rem;
+  padding: 0.7rem 0.9rem;
+  text-align: center;
+  background: rgba(14, 16, 19, 0.82);
+  border: 1px solid rgba(0, 194, 255, 0.55);
+  border-radius: 12px;
+  box-shadow: 0 0 22px rgba(0, 194, 255, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out);
+  will-change: transform;
+}
+
+.xray-callout.is-on {
+  opacity: 1;
+}
+
+.xray-callout strong {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--augent-brand-gold);
+}
+
+.xray-callout-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+/* tablet / mobile: title, then scene, then list */
+@media (max-width: 991px) {
+  .xray-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .xray-copy {
+    display: contents;
+  }
+  .xray-heading {
+    order: 1;
+  }
+  .xray-stage {
+    order: 2;
+    height: 440px;
+  }
+  .xray-list {
+    order: 3;
+  }
+  .xray-controls {
+    order: 4;
+  }
+}
+
+@media (max-width: 767px) {
+  .xray-stage {
+    height: 380px;
+    margin: 0 -1.25rem;
+  }
+  .xray-callout {
+    max-width: 18rem;
+  }
+  .xray-item > button {
+    min-height: 48px;
+  }
+  .xray-ctl {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xray-stage,
+  .xray-callout,
+  .xray-tools {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   THEME: Carbon Slate / Ice Blue / Electric Blue / Chartreuse
+   Roles
+     navy        Carbon Slate surfaces    #121417   (--navy* names kept as aliases)
+     ice         text on dark, light bg   #E8F4FF
+     eblue       interactive on dark      #00C2FF   (9:1 on navy)
+     eblue-ink   interactive on light     #0077AD   (4.9:1 on white, AA body)
+     eblue-strong  large text on light    #0099CC   (3.3:1 on white, AA large)
+     chartreuse  CTAs + key highlights    #D6FF4A   (always with navy text, never as text)
+   ========================================================= */
+:root {
+  --navy: #121417;
+  --navy-900: #0B0C0E;
+  --navy-800: #1A1D21;
+  --navy-700: #23272D;
+  --navy-600: #2E333A;
+  --ice: #E8F4FF;
+  --ice-200: #cfe8fa;
+  --eblue: #00c2ff;
+  --eblue-bright: #5ad8ff;
+  --eblue-strong: #0099cc;
+  --eblue-ink: #0077ad;
+  --chartreuse: #d6ff4a;
+  --chartreuse-bright: #e6ff8f;
+
+  /* section context tokens (light by default; .on-dark sections override) */
+  --surface: #ffffff;
+  --text: var(--navy);
+  --text-muted: rgba(18, 20, 23, 0.68);
+  --accent: var(--eblue-ink);
+  --accent-large: var(--eblue-strong);
+  --hairline: rgba(18, 20, 23, 0.12);
+
+  /* CTA family: Chartreuse with Carbon Slate text, everywhere */
+  --btn-primary-bg: var(--chartreuse);
+  --btn-primary-hover: var(--chartreuse-bright);
+  --btn-primary-text: var(--navy);
+  --btn-border-hover: var(--navy);
+  --augent-gold-90: var(--navy);
+  --augent-gold-10: var(--chartreuse-bright);
+
+  /* page-level defaults */
+  --bg-primary: var(--navy);
+  --text-primary: var(--ice);
+}
+
+/* dark sections: Ice text, Electric Blue interaction */
+.lp-hero,
+.solutions,
+.architecture,
+.cta-card,
+.footer,
+.cap-tile,
+.flip-front {
+  --surface: var(--navy);
+  --text: var(--ice);
+  --text-muted: rgba(232, 244, 255, 0.75);
+  --accent: var(--eblue);
+  --accent-large: var(--eblue);
+  --hairline: rgba(232, 244, 255, 0.14);
+}
+
+/* ---------- Chartreuse: CTAs and a few key highlights only ---------- */
+.cta-btn .cta-btn-label,
+.cta-btn-arrow .arrow-icon {
+  color: var(--navy);
+}
+
+/* white "alternate" buttons hover to Electric Blue, keeping Chartreuse for primaries */
+.cta-btn.alternate {
+  --btn-hover-bg: var(--eblue);
+}
+
+.submit-btn {
+  color: var(--navy);
+  background-color: var(--chartreuse);
+}
+
+.submit-btn:hover {
+  background-color: var(--chartreuse-bright);
+}
+
+.pulse-ring {
+  border-color: var(--chartreuse);
+}
+
+/* ---------- light-section contrast fixes ---------- */
+/* nav on the white (scrolled) header: darker blue so hover/active stay visible */
+.header.scrolled .nav-link:hover,
+.header.menu-open .nav-link:hover {
+  border-bottom-color: var(--eblue-strong);
+}
+
+.header.scrolled .nav-indicator,
+.mobile-menu .nav-indicator {
+  background: var(--eblue-strong);
+}
+
+.mobile-menu .nav-link {
+  color: var(--navy);
+}
+
+.mobile-menu .nav-link.is-active {
+  color: var(--eblue-ink);
+}
+
+/* focus rings: 3:1+ on both white and navy */
+:focus-visible {
+  outline-color: var(--eblue-strong);
+}
+
+.lp-hero :focus-visible,
+.solutions :focus-visible,
+.architecture :focus-visible,
+.cta-card :focus-visible,
+.footer :focus-visible {
+  outline-color: var(--eblue);
+}
+
+/* small accent text on white uses the darker ink blue (AA body text) */
+.philosophy-left strong {
+  color: var(--eblue-ink);
+}
+
+.philosophy-tagline,
+.sector-heading {
+  color: var(--navy);
+}
+
+.why-card:hover,
+.why-card.touch-hover {
+  color: var(--eblue-strong);
+}
+
+.sector-label {
+  color: var(--navy);
+  opacity: 0.6;
+}
+
+.plane-progress span {
+  background-color: var(--eblue-strong);
+}
+
+/* light cards and tabs */
+.plane-tab.active {
+  background-color: var(--ice);
+}
+
+.industry-tab.active {
+  background-color: var(--navy);
+  color: var(--ice);
+}
+
+.industry-tab:hover {
+  background-color: var(--navy-700);
+  color: var(--ice);
+}
+
+.flip-back {
+  background-color: var(--ice);
+}
+
+.flip-back .back-text {
+  color: var(--navy);
+}
+
+.pink-blur {
+  background-color: var(--ice);
+}
+
+/* form on the navy CTA card */
+.form-checkbox input {
+  accent-color: var(--eblue);
+}
+
+.text-field:focus {
+  border-color: var(--eblue);
+  box-shadow: 0 0 0 3px rgba(0, 194, 255, 0.35);
+}
+
+/* footer links: Ice at rest, Electric Blue on hover */
+.footer-legal a,
+.footer-credit {
+  color: rgba(232, 244, 255, 0.6);
+}
+
+.footer-legal a:hover {
+  color: var(--eblue);
+}
+
+.footer {
+  background-image: linear-gradient(var(--navy-900), var(--navy));
+}
+
+/* the architecture background circles bitmap was purple: render it as neutral grey rings */
+.architecture {
+  background-image: linear-gradient(0deg, #1F2328, #0B0C0E);
+}
+
+.architecture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--circles) 50% / cover no-repeat;
+  filter: grayscale(1) brightness(0.75);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* the X-ray scan line is a Chartreuse highlight (set in lib/xrayScene.ts) */
+
+/* ---------- Footer wordmark: continuous random letter swap on GENT ---------- */
+.swap-wordmark {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.swap-wordmark .wm-au {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.wm-letter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden; /* the mask each letter slides through */
+}
+
+.wm-copy {
+  position: absolute;
+  inset: 0;
+  display: block;
+  will-change: transform;
+}
+
+.wm-copy svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- CTA card: scroll-driven 3D tilt (components/CTAForm.tsx) ---------- */
+.cta-stage {
+  perspective: 1400px;
+  perspective-origin: 50% 0%;
+}
+
+.cta-card {
+  will-change: transform;
+  transform-style: flat;
+}
+
+/* =========================================================
+   Who Uses: particle-assembled reveal cards (components/WhoUses.tsx,
+   lib/particleText.ts). The frame settles inside the card while the icon +
+   role dissolve into particles that assemble the description; the real text
+   fades in (.text-on) once they land. Same size, icon and copy as before.
+   ========================================================= */
+.who-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  font: inherit;
+  color: var(--ice);
+  text-align: center;
+  cursor: pointer;
+  background: var(--navy-800);
+  border: 0;
+  border-radius: 1rem;
+  isolation: isolate;
+  transition: border-radius 0.5s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.who-card .value-glow {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -50%;
+  width: 150%;
+  max-width: none;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+/* two faces stacked in the same square */
+.who-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1.4rem;
+}
+
+.who-front {
+  gap: 1.25rem;
+  transition: opacity 0.45s ease, transform 0.6s ease, filter 0.45s ease;
+}
+
+.who-front .user-icon {
+  height: 7rem;
+  width: auto;
+}
+
+.who-front .role {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  color: var(--ice);
+}
+
+/* laid out from the start (the particles measure it), hidden until they land */
+.who-reveal {
+  gap: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.who-reveal-role {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--eblue);
+}
+
+.who-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(232, 244, 255, 0.88);
+  text-wrap: balance;
+}
+
+.who-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* rotated frame that straightens and settles inside the card */
+.who-border {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 1.5px solid var(--eblue);
+  border-radius: 1rem;
+  opacity: 0;
+  transform: rotate(10deg);
+  pointer-events: none;
+  transition: inset 0.6s ease-in-out, opacity 0.5s ease-in-out, transform 0.6s ease-in-out, border-radius 0.6s ease-in-out;
+}
+
+/* active: hover, keyboard focus or tapped open */
+.who-card.is-active {
+  border-radius: 6px;
+}
+.who-card.is-active .who-border {
+  inset: 12px;
+  opacity: 1;
+  transform: rotate(0);
+  border-radius: 4px;
+}
+.who-card.is-active .who-front {
+  opacity: 0;
+  transform: scale(0.96);
+  filter: blur(3px);
+}
+.who-card.text-on .who-reveal {
+  opacity: 1;
+  transition-duration: 0.4s;
+}
+
+.who-card:focus-visible {
+  outline: none; /* the settled frame is the focus indicator */
+}
+
+/* the description sits inside the frame, so give it room on smaller cards */
+@media (max-width: 1180px) {
+  .who-desc {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .who-front .user-icon {
+    height: 5rem;
+  }
+  .who-front .role {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+  .who-face {
+    padding: 1.4rem 1.25rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .who-front {
+    gap: 0.5rem;
+  }
+  .who-face {
+    padding: 1.2rem 0.9rem;
+  }
+  .who-front .role {
+    font-size: 0.8rem;
+  }
+  .who-reveal-role {
+    display: none; /* tiny cards: description only */
+  }
+  .who-desc {
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .who-front,
+  .who-border,
+  .who-reveal {
+    transition: opacity 0.2s linear;
+  }
+  .who-card.is-active .who-front {
+    transform: none;
+    filter: none;
+  }
+  .who-border {
+    inset: 12px;
+    transform: none;
+  }
+}
+
+/* =========================================================
+   Footer: particle halo ring (components/fx/HaloSpray.tsx)
+   The ring runs full width so its arms can stream off both edges; the
+   AuGENT wordmark (GENT letter swap unchanged) sits centred in the ring.
+   ========================================================= */
+.footer {
+  /* the CTA card overlaps the footer by 160px (negative margin): clear it */
+  padding-top: calc(160px + 2.5rem);
+}
+
+.footer-halo {
+  width: 100%;
+  height: clamp(440px, 58vw, 780px);
+  /* soften the top and bottom edges into the footer gradient */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 86%, transparent 100%);
+}
+
+.footer-halo .halo-center {
+  position: absolute;
+  left: var(--halo-x, 50%);
+  top: var(--halo-y, 50%);
+  width: calc(var(--halo-d, 600px) * 0.74);
+  translate: -50% -50%;
+  z-index: 1;
+}
+
+.footer-halo-logo {
+  display: block;
+  width: 100%;
+  filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.85));
+}
+
+.footer .footer-top {
+  margin-top: 1rem;
+}
+
+/* =========================================================
+   Footer bottom row: copyright | layered social icons | legal
+   (components/fx/LayeredSocials.tsx, layered-stack hover adapted
+   from a Uiverse snippet by vikas7754)
+   ========================================================= */
+.footer .footer-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.footer .footer-legal {
+  justify-content: flex-end;
+}
+
+.soc-list {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.soc-icon {
+  position: relative;
+  display: block;
+  color: var(--eblue);
+  text-decoration: none;
+  outline: none;
+}
+
+.soc-layer {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.soc-layer > span {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--eblue);
+  border-radius: 6px;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+}
+
+.soc-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy-900);
+}
+
+.soc-face svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* the platform name slides down from behind the tile */
+.soc-label {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--eblue);
+  opacity: 0;
+  translate: -50% 0;
+  pointer-events: none;
+  transition: bottom 0.3s ease, opacity 0.3s ease;
+}
+
+/* hover / keyboard focus: tilt into isometric view and fan the layers out */
+.soc-icon:is(:hover, :focus-visible) .soc-layer {
+  transform: rotate(-35deg) skew(20deg);
+}
+.soc-icon:is(:hover, :focus-visible) .soc-layer > span {
+  box-shadow: -1px 1px 3px rgba(0, 194, 255, 0.6);
+}
+.soc-icon:is(:hover, :focus-visible) .soc-layer > span:nth-child(1) {
+  opacity: 0.2;
+}
+.soc-icon:is(:hover, :focus-visible) .soc-layer > span:nth-child(2) {
+  opacity: 0.4;
+  transform: translate(4px, -4px);
+}
+.soc-icon:is(:hover, :focus-visible) .soc-layer > span:nth-child(3) {
+  opacity: 0.6;
+  transform: translate(8px, -8px);
+}
+.soc-icon:is(:hover, :focus-visible) .soc-layer > span:nth-child(4) {
+  opacity: 0.8;
+  transform: translate(12px, -12px);
+}
+.soc-icon:is(:hover, :focus-visible) .soc-layer > span:nth-child(5) {
+  opacity: 1;
+  transform: translate(16px, -16px);
+}
+.soc-icon:is(:hover, :focus-visible) .soc-label {
+  bottom: -26px;
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .footer .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 1.75rem;
+  }
+  .footer .soc-list {
+    order: -1; /* icons first, above the copyright */
+  }
+  .footer .footer-legal {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soc-layer,
+  .soc-layer > span,
+  .soc-label {
+    transition: opacity 0.2s linear;
+  }
+  .soc-icon:is(:hover, :focus-visible) .soc-layer {
+    transform: none;
+  }
+  .soc-icon:is(:hover, :focus-visible) .soc-layer > span {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   Core Capabilities: rotating gradient border on hover
+   (adapted from a Uiverse card by bhaveshxrawat). The snippet spins a
+   narrow gradient bar behind a 5px inset cover; these cards are wide, so a
+   conic gradient spins instead and is masked down to a thin border, so the
+   light runs evenly around the whole edge. Electric Blue to magenta.
+   ========================================================= */
+@property --cap-spin {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.cap-tile {
+  position: relative;
+  isolation: isolate;
+}
+
+.cap-tile::before {
+  content: "";
+  position: absolute;
+  inset: -1px; /* sit over the existing 1px border */
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: conic-gradient(
+    from var(--cap-spin),
+    transparent 0deg,
+    transparent 150deg,
+    rgba(0, 183, 255, 0.9) 220deg,
+    #00c2ff 270deg,
+    #ff30ff 330deg,
+    transparent 360deg
+  );
+  transition: opacity 0.35s var(--ease-out);
+  animation: cap-spin 3s linear infinite paused;
+}
+
+/* crisp 2px ring */
+.cap-tile::before {
+  z-index: 2;
+  padding: 2px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+@keyframes cap-spin {
+  to {
+    --cap-spin: 360deg;
+  }
+}
+
+.cap-tile:hover,
+.cap-tile.is-hovered {
+  border-color: transparent;
+  box-shadow:
+    0 0 22px 2px rgba(0, 194, 255, 0.14),
+    0 22px 40px -26px rgba(52, 60, 72, 0.85);
+}
+
+.cap-tile:hover::before,
+.cap-tile.is-hovered::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cap-tile::before {
+    animation: none;
+    --cap-spin: 200deg; /* a still, lit edge instead of a spinning one */
+  }
+}
+
+/* =========================================================
+   Use Cases: sector icon in rippling glass discs
+   (components/fx/SectorRipple.tsx, adapted from a Uiverse loader by
+   Smit-Prajapati). Recoloured for the light section: Electric Blue glass
+   with a soft navy shadow instead of grey on black.
+   ========================================================= */
+.sector-ripple {
+  --sr-duration: 2.4s;
+  position: relative;
+  flex-shrink: 0;
+  width: 22rem;
+  max-width: 40%;
+  aspect-ratio: 1;
+}
+
+.sr-box {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(0deg, rgba(0, 153, 204, 0.1) 0%, rgba(0, 194, 255, 0.04) 100%);
+  border-top: 1px solid rgba(0, 153, 204, 0.9);
+  box-shadow: rgba(18, 20, 23, 0.14) 0 10px 10px 0;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  animation: sr-ripple var(--sr-duration) infinite ease-in-out paused;
+}
+
+/* innermost disc carries the icon; outer ones fade their top edge */
+.sr-box:nth-child(1) {
+  inset: 22%;
+  z-index: 5;
+}
+.sr-box:nth-child(2) {
+  inset: 16.5%;
+  z-index: 4;
+  border-color: rgba(0, 153, 204, 0.75);
+  animation-delay: 0.2s;
+}
+.sr-box:nth-child(3) {
+  inset: 11%;
+  z-index: 3;
+  border-color: rgba(0, 153, 204, 0.55);
+  animation-delay: 0.4s;
+}
+.sr-box:nth-child(4) {
+  inset: 5.5%;
+  z-index: 2;
+  border-color: rgba(0, 153, 204, 0.38);
+  animation-delay: 0.6s;
+}
+.sr-box:nth-child(5) {
+  inset: 0;
+  z-index: 1;
+  border-color: rgba(0, 153, 204, 0.22);
+  animation-delay: 0.8s;
+}
+
+/* the sector SVG clipped to its centre disc (its own rings are dropped) */
+.sr-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 178%; /* the disc is ~52% of the SVG; this makes it fill the inner box */
+  max-width: none;
+  height: auto;
+  translate: -50% -50%;
+  clip-path: circle(25.4% at 50% 50%);
+  animation: sr-glow var(--sr-duration) infinite ease-in-out paused;
+}
+
+.sector-ripple.is-live .sr-box,
+.sector-ripple.is-live .sr-icon {
+  animation-play-state: running;
+}
+
+@keyframes sr-ripple {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: rgba(18, 20, 23, 0.14) 0 10px 10px 0;
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: rgba(18, 20, 23, 0.14) 0 30px 20px 0;
+  }
+}
+
+/* stands in for the snippet's fill change: the icon brightens on each beat */
+@keyframes sr-glow {
+  0%,
+  100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.3) saturate(1.15) drop-shadow(0 0 14px rgba(0, 194, 255, 0.55));
+  }
+}
+
+@media (max-width: 991px) {
+  .sector-ripple {
+    max-width: 60%;
+    margin: 1.5rem 0; /* room for the swell when stacked */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-box,
+  .sr-icon {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   Hero: "Living Signal Field" (components/hero/LivingPlanesHero.tsx,
+   SignalField.tsx; toggles in lib/heroFx.ts)
+   ========================================================= */
+.signal-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* headline: one mask per line, the line springs up inside it */
+.hero-stagger {
+  position: relative; /* offset parent for the per-line spotlight */
+  white-space: normal;
+}
+
+.ht-mask {
+  display: block;
+  overflow: hidden;
+  /* room for descenders inside the mask without changing line spacing */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.ht-line {
+  display: inline-block;
+  background-image: linear-gradient(#fff, #fff); /* pre-hydration fallback */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  will-change: transform;
+}
+
+/* header "Au" mark: one soft gold pulse when the headline lands */
+.au-pulse {
+  position: absolute;
+  left: -6%;
+  top: -60%;
+  width: 36%;
+  height: 220%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(closest-side, rgba(234, 190, 105, 0.55), rgba(234, 190, 105, 0));
+  mix-blend-mode: screen;
+}
+
+.header-logo.au-pulsing .au-pulse {
+  animation: au-pulse 1.3s ease-out;
+}
+
+@keyframes au-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+/* plane stack wrappers: idle float + cursor parallax (transforms set by Motion) */
+.stack-live,
+.stack-float {
+  will-change: transform;
+}
+
+/* active plane: faint gold light running around its edges */
+@property --edge-spin {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.plane-edge {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  opacity: 0;
+  background: conic-gradient(
+    from var(--edge-spin),
+    transparent 0deg,
+    transparent 200deg,
+    rgba(234, 190, 105, 0.15) 260deg,
+    rgba(246, 229, 135, 0.85) 320deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: opacity 0.35s var(--ease-out);
+  animation: edge-spin 2.6s linear infinite paused;
+}
+
+.plane-layer.is-active .plane-edge {
+  opacity: 0.8;
+  animation-play-state: running;
+}
+
+@keyframes edge-spin {
+  to {
+    --edge-spin: 360deg;
+  }
+}
+
+/* primary CTA: soft outer glow that flares once on the first mouse move */
+.cta-glow {
+  display: inline-flex;
+  border-radius: 6px;
+  transition: filter 0.45s var(--ease-out);
+}
+
+.cta-glow.is-on {
+  filter: drop-shadow(0 0 10px rgba(214, 255, 74, 0.22));
+}
+
+.cta-glow.is-on.is-flare {
+  filter: drop-shadow(0 0 8px rgba(214, 255, 74, 0.55)) drop-shadow(0 0 26px rgba(214, 255, 74, 0.45));
+  transition-duration: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-logo.au-pulsing .au-pulse {
+    animation: none;
+  }
+  .plane-edge {
+    animation: none;
+    --edge-spin: 300deg; /* still, lit edge */
+  }
+  .cta-glow {
+    transition: none;
+  }
+}
