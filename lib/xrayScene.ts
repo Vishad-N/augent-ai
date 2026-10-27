@@ -30,8 +30,8 @@ type Options = {
   onPick: (index: number) => void;
 };
 
-const GOLD = new THREE.Color("#00c2ff"); // wireframe + focus edges: Electric Blue
-const CHARTREUSE = new THREE.Color("#d6ff4a"); // scan line: the one high-energy highlight
+const GOLD = new THREE.Color("#F5BC27"); // wireframe + focus edges: Electric Blue
+const CHARTREUSE = new THREE.Color("#F5BC27"); // scan line: the one high-energy highlight
 const LAYER = new THREE.Color("#3a424e");
 const REVEAL_MS = 800;
 
@@ -51,7 +51,7 @@ export function createXRay(host: HTMLElement, canvas: HTMLCanvasElement, opts: O
   scene.add(new THREE.AmbientLight("#ffffff", 0.85));
   const key = new THREE.DirectionalLight("#ffffff", 1.25);
   key.position.set(4, 8, 6);
-  const warm = new THREE.PointLight("#00c2ff", 1.2, 20);
+  const warm = new THREE.PointLight("#F5BC27", 1.2, 20);
   warm.position.set(-3, 2, 4);
   scene.add(key, warm);
 

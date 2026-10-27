@@ -12,6 +12,16 @@ import SignalLine from "./fx/SignalLine";
 type Item = (typeof whoUses)[number];
 
 /**
+ * Descriptions open by repeating the role ("CIOs & CDOs for a secure..."), and
+ * the card already shows the role as its heading. Drop the repeated lead-in so
+ * the role reads once; the rest of the sentence is untouched.
+ */
+function withoutRole(item: Item) {
+  const m = item.description.match(/^(.{1,60}?)\s+((?:for|to|such as)\s[\s\S]*)$/);
+  return m ? m[2] : item.description;
+}
+
+/**
  * "Who Uses" cards. On hover / focus / tap, an Electric Blue frame settles
  * inside the card while the icon + role dissolve into a few thousand particles
  * that stream across and assemble the full role + description at once. The
@@ -103,7 +113,7 @@ function WhoCard({ item, open, onToggle }: { item: Item; open: boolean; onToggle
       {/* revealed face: role + description (assembled by the particles) */}
       <span className="who-face who-reveal">
         <span className="who-reveal-role">{item.role}</span>
-        <span className="who-desc">{item.description}</span>
+        <span className="who-desc">{withoutRole(item)}</span>
       </span>
       <canvas ref={canvasRef} className="who-particles" aria-hidden="true" />
       <span className="who-border" aria-hidden="true" />

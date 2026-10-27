@@ -3,6 +3,7 @@ import { Inter_Tight } from "next/font/google";
 import { meta } from "@/data/content";
 import "./globals.css";
 import "./living.css";
+import "./theme.css";
 import AckLayer from "@/components/fx/AckLayer";
 
 const interTight = Inter_Tight({
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0b1026",
+  themeColor: "#0E0E10",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

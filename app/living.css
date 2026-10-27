@@ -7,7 +7,7 @@
 
 :root {
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --gold-line: rgba(0, 194, 255, 0.9);
+  --gold-line: rgba(245, 188, 39, 0.9);
   --plane-border: rgba(207, 232, 250, 0.22);
 }
 
@@ -23,8 +23,8 @@
   color: var(--augent-white);
   /* off-black purple base, not #000; one restrained glow behind the stack */
   background:
-    radial-gradient(52% 58% at 74% 50%, rgba(0, 194, 255, 0.11), transparent 72%),
-    radial-gradient(38% 42% at 8% 96%, rgba(0, 194, 255, 0.05), transparent 70%),
+    radial-gradient(52% 58% at 74% 50%, rgba(245, 188, 39, 0.11), transparent 72%),
+    radial-gradient(38% 42% at 8% 96%, rgba(245, 188, 39, 0.05), transparent 70%),
     var(--augent-purple-90);
   overflow: hidden;
 }
@@ -133,7 +133,7 @@
 }
 
 .plane-layer.is-active {
-  border-color: rgba(0, 194, 255, 0.75);
+  border-color: rgba(245, 188, 39, 0.75);
   background: linear-gradient(135deg, rgba(0, 110, 150, 0.6), rgba(26, 29, 33, 0.72));
 }
 
@@ -153,7 +153,7 @@
 }
 
 .trace-idle path {
-  stroke: rgba(0, 194, 255, 0.26);
+  stroke: rgba(245, 188, 39, 0.26);
   stroke-width: 1;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .trace-pads rect {
-  fill: rgba(0, 194, 255, 0.3);
+  fill: rgba(245, 188, 39, 0.3);
   transition: fill 0.3s var(--ease-out);
 }
 
@@ -220,7 +220,7 @@
   top: 50%;
   width: 14px;
   height: 1px;
-  background: rgba(0, 194, 255, 0.45);
+  background: rgba(245, 188, 39, 0.45);
   transform-origin: left;
   transition: transform 0.25s var(--ease-out), background-color 0.25s var(--ease-out);
 }
@@ -270,7 +270,7 @@
   min-height: 4.9rem;
   margin: 0.25rem 0 0 8%;
   padding-left: 1rem;
-  border-left: 1px solid rgba(0, 194, 255, 0.45);
+  border-left: 1px solid rgba(245, 188, 39, 0.45);
 }
 
 .readout-title {
@@ -334,7 +334,7 @@
 }
 
 .plane-card.is-open {
-  border-color: rgba(0, 194, 255, 0.7);
+  border-color: rgba(245, 188, 39, 0.7);
 }
 
 .plane-card-head {
@@ -366,7 +366,7 @@
 }
 
 .glyph-on {
-  fill: rgba(0, 194, 255, 0.22);
+  fill: rgba(245, 188, 39, 0.22);
   stroke: var(--augent-brand-gold);
   stroke-width: 1.2;
 }
@@ -550,7 +550,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1.5px var(--augent-brand-gold), 0 0 0 1px rgba(0, 194, 255, 0.35);
+  box-shadow: inset 0 0 0 1.5px var(--augent-brand-gold), 0 0 0 1px rgba(245, 188, 39, 0.35);
   opacity: 0;
   pointer-events: none;
 }
@@ -772,12 +772,12 @@
 }
 
 .hb-nodes circle {
-  fill: rgba(0, 194, 255, 0.5);
+  fill: rgba(245, 188, 39, 0.5);
 }
 
 .hb-halos circle {
   fill: none;
-  stroke: rgba(0, 194, 255, 0.16);
+  stroke: rgba(245, 188, 39, 0.16);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
@@ -796,7 +796,7 @@
   position: absolute;
   height: 1px;
   rotate: -24deg;
-  background: linear-gradient(90deg, transparent, rgba(0, 194, 255, 0.3) 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(245, 188, 39, 0.3) 50%, transparent);
 }
 
 .hb-streak.s1 {
@@ -838,7 +838,7 @@
   height: 76px;
   left: 90%;
   top: 44%;
-  border-color: rgba(0, 194, 255, 0.14);
+  border-color: rgba(245, 188, 39, 0.14);
 }
 
 /* 4. vignette keeps the edges dark so the stack and copy stay the focus */
@@ -907,7 +907,7 @@
 }
 
 .trace-signals .signal-halo {
-  fill: rgba(0, 194, 255, 0.28);
+  fill: rgba(245, 188, 39, 0.28);
 }
 
 /* brighter, larger glow on the plane in focus */
@@ -916,7 +916,7 @@
 }
 
 .trace-signals.on .signal-halo {
-  fill: rgba(0, 194, 255, 0.45);
+  fill: rgba(245, 188, 39, 0.45);
   r: 4.2;
 }
 
@@ -999,7 +999,7 @@
   height: 36px;
   margin-top: -18px;
   border-radius: 3px;
-  background: rgba(0, 194, 255, 0.28);
+  background: rgba(245, 188, 39, 0.28);
   overflow: hidden;
 }
 
@@ -1231,11 +1231,11 @@
 .cap-tile:hover,
 .cap-tile.is-hovered {
   translate: 0 -4px;
-  border-color: rgba(0, 194, 255, 0.75);
+  border-color: rgba(245, 188, 39, 0.75);
   box-shadow:
-    0 0 0 1px rgba(0, 194, 255, 0.35),
-    0 0 18px 2px rgba(0, 194, 255, 0.22),
-    0 0 42px 6px rgba(0, 194, 255, 0.08),
+    0 0 0 1px rgba(245, 188, 39, 0.35),
+    0 0 18px 2px rgba(245, 188, 39, 0.22),
+    0 0 42px 6px rgba(245, 188, 39, 0.08),
     0 22px 40px -26px rgba(52, 60, 72, 0.85);
 }
 
@@ -1246,13 +1246,13 @@
   height: 72px;
   margin-bottom: 0.35rem;
   border-radius: 14px;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.09), transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(245, 188, 39, 0.09), transparent 70%);
   transition: background 0.3s var(--ease-out);
 }
 
 .cap-tile:hover .cap-icon,
 .cap-tile.is-hovered .cap-icon {
-  background: radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.2), transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(245, 188, 39, 0.2), transparent 70%);
 }
 
 .cap-icon canvas {
@@ -1443,7 +1443,7 @@
 
 .xray-item.is-active > button {
   color: var(--augent-brand-gold);
-  background-color: rgba(0, 194, 255, 0.06);
+  background-color: rgba(245, 188, 39, 0.06);
 }
 
 .xray-item.is-active > button::before {
@@ -1503,7 +1503,7 @@
 .xray-ctl:hover:not(:disabled),
 .xray-ctl[aria-pressed="true"] {
   color: var(--augent-brand-gold);
-  border-color: rgba(0, 194, 255, 0.6);
+  border-color: rgba(245, 188, 39, 0.6);
 }
 
 .xray-ctl:disabled {
@@ -1545,9 +1545,9 @@
   padding: 0.7rem 0.9rem;
   text-align: center;
   background: rgba(14, 16, 19, 0.82);
-  border: 1px solid rgba(0, 194, 255, 0.55);
+  border: 1px solid rgba(245, 188, 39, 0.55);
   border-radius: 12px;
-  box-shadow: 0 0 22px rgba(0, 194, 255, 0.15);
+  box-shadow: 0 0 22px rgba(245, 188, 39, 0.15);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.25s var(--ease-out);
@@ -1624,10 +1624,10 @@
    Roles
      navy        Carbon Slate surfaces    #121417   (--navy* names kept as aliases)
      ice         text on dark, light bg   #E8F4FF
-     eblue       interactive on dark      #00C2FF   (9:1 on navy)
-     eblue-ink   interactive on light     #0077AD   (4.9:1 on white, AA body)
-     eblue-strong  large text on light    #0099CC   (3.3:1 on white, AA large)
-     chartreuse  CTAs + key highlights    #D6FF4A   (always with navy text, never as text)
+     eblue       interactive on dark      #F5BC27   (9:1 on navy)
+     eblue-ink   interactive on light     #8A6500   (4.9:1 on white, AA body)
+     eblue-strong  large text on light    #C9960C   (3.3:1 on white, AA large)
+     chartreuse  CTAs + key highlights    #F5BC27   (always with navy text, never as text)
    ========================================================= */
 :root {
   --navy: #121417;
@@ -1637,12 +1637,12 @@
   --navy-600: #2E333A;
   --ice: #E8F4FF;
   --ice-200: #cfe8fa;
-  --eblue: #00c2ff;
-  --eblue-bright: #5ad8ff;
-  --eblue-strong: #0099cc;
-  --eblue-ink: #0077ad;
-  --chartreuse: #d6ff4a;
-  --chartreuse-bright: #e6ff8f;
+  --eblue: #F5BC27;
+  --eblue-bright: #FFD35C;
+  --eblue-strong: #C9960C;
+  --eblue-ink: #8A6500;
+  --chartreuse: #F5BC27;
+  --chartreuse-bright: #FFD35C;
 
   /* section context tokens (light by default; .on-dark sections override) */
   --surface: #ffffff;
@@ -1796,7 +1796,7 @@
 
 .text-field:focus {
   border-color: var(--eblue);
-  box-shadow: 0 0 0 3px rgba(0, 194, 255, 0.35);
+  box-shadow: 0 0 0 3px rgba(245, 188, 39, 0.35);
 }
 
 /* footer links: Ice at rest, Electric Blue on hover */
@@ -2181,7 +2181,7 @@
   transform: rotate(-35deg) skew(20deg);
 }
 .soc-icon:is(:hover, :focus-visible) .soc-layer > span {
-  box-shadow: -1px 1px 3px rgba(0, 194, 255, 0.6);
+  box-shadow: -1px 1px 3px rgba(245, 188, 39, 0.6);
 }
 .soc-icon:is(:hover, :focus-visible) .soc-layer > span:nth-child(1) {
   opacity: 0.2;
@@ -2266,7 +2266,7 @@
     transparent 0deg,
     transparent 150deg,
     rgba(0, 183, 255, 0.9) 220deg,
-    #00c2ff 270deg,
+    #F5BC27 270deg,
     #ff30ff 330deg,
     transparent 360deg
   );
@@ -2293,7 +2293,7 @@
 .cap-tile.is-hovered {
   border-color: transparent;
   box-shadow:
-    0 0 22px 2px rgba(0, 194, 255, 0.14),
+    0 0 22px 2px rgba(245, 188, 39, 0.14),
     0 22px 40px -26px rgba(52, 60, 72, 0.85);
 }
 
@@ -2328,8 +2328,8 @@
 .sr-box {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(0deg, rgba(0, 153, 204, 0.1) 0%, rgba(0, 194, 255, 0.04) 100%);
-  border-top: 1px solid rgba(0, 153, 204, 0.9);
+  background: linear-gradient(0deg, rgba(201, 150, 12, 0.1) 0%, rgba(245, 188, 39, 0.04) 100%);
+  border-top: 1px solid rgba(201, 150, 12, 0.9);
   box-shadow: rgba(18, 20, 23, 0.14) 0 10px 10px 0;
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
@@ -2344,25 +2344,25 @@
 .sr-box:nth-child(2) {
   inset: 16.5%;
   z-index: 4;
-  border-color: rgba(0, 153, 204, 0.75);
+  border-color: rgba(201, 150, 12, 0.75);
   animation-delay: 0.2s;
 }
 .sr-box:nth-child(3) {
   inset: 11%;
   z-index: 3;
-  border-color: rgba(0, 153, 204, 0.55);
+  border-color: rgba(201, 150, 12, 0.55);
   animation-delay: 0.4s;
 }
 .sr-box:nth-child(4) {
   inset: 5.5%;
   z-index: 2;
-  border-color: rgba(0, 153, 204, 0.38);
+  border-color: rgba(201, 150, 12, 0.38);
   animation-delay: 0.6s;
 }
 .sr-box:nth-child(5) {
   inset: 0;
   z-index: 1;
-  border-color: rgba(0, 153, 204, 0.22);
+  border-color: rgba(201, 150, 12, 0.22);
   animation-delay: 0.8s;
 }
 
@@ -2403,7 +2403,7 @@
     filter: brightness(1) saturate(1);
   }
   50% {
-    filter: brightness(1.3) saturate(1.15) drop-shadow(0 0 14px rgba(0, 194, 255, 0.55));
+    filter: brightness(1.3) saturate(1.15) drop-shadow(0 0 14px rgba(245, 188, 39, 0.55));
   }
 }
 
@@ -2544,11 +2544,11 @@
 }
 
 .cta-glow.is-on {
-  filter: drop-shadow(0 0 10px rgba(214, 255, 74, 0.22));
+  filter: drop-shadow(0 0 10px rgba(245, 188, 39, 0.22));
 }
 
 .cta-glow.is-on.is-flare {
-  filter: drop-shadow(0 0 8px rgba(214, 255, 74, 0.55)) drop-shadow(0 0 26px rgba(214, 255, 74, 0.45));
+  filter: drop-shadow(0 0 8px rgba(245, 188, 39, 0.55)) drop-shadow(0 0 26px rgba(245, 188, 39, 0.45));
   transition-duration: 0.3s;
 }
 

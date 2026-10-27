@@ -40,7 +40,7 @@ type Entry = {
 
 export const ICON_PX = 72;
 
-const GOLD = new THREE.Color("#00c2ff"); // hover glow: Electric Blue
+const GOLD = new THREE.Color("#F5BC27"); // hover glow: Electric Blue
 const BASE_EMISSIVE = new THREE.Color("#0d0f12");
 
 let renderer: THREE.WebGLRenderer | null = null;
@@ -126,14 +126,14 @@ function purpleMat() {
 
 function goldMat() {
   return new THREE.MeshStandardMaterial({
-    color: "#00c2ff",
+    color: "#F5BC27",
     roughness: 0.35,
     metalness: 0.55,
     emissive: new THREE.Color("#003a52"),
   });
 }
 
-const goldLine = () => new THREE.LineBasicMaterial({ color: "#00c2ff", transparent: true, opacity: 0.85 });
+const goldLine = () => new THREE.LineBasicMaterial({ color: "#F5BC27", transparent: true, opacity: 0.85 });
 
 function withEdges(mesh: THREE.Mesh, threshold = 20) {
   mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, threshold), goldLine()));
@@ -294,7 +294,7 @@ function buildScene(kind: IconKind) {
   scene.add(new THREE.AmbientLight("#ffffff", 0.9));
   const key = new THREE.DirectionalLight("#ffffff", 1.6);
   key.position.set(2.5, 3, 4);
-  const rim = new THREE.DirectionalLight("#00c2ff", 0.7);
+  const rim = new THREE.DirectionalLight("#F5BC27", 0.7);
   rim.position.set(-3, -1.5, -2);
   scene.add(key, rim);
   const built = BUILDERS[kind]();

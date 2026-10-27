@@ -1,0 +1,171 @@
+/* Connected Risk Chain (components/ProblemSection.tsx). Self-contained. */
+.rc-chain {
+  --rc-gap: 24px;
+  --rc-line: rgba(27, 27, 31, 0.16);
+  --rc-gold: #f5bc27;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--rc-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rc-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* node dot (the pulse stops on it) */
+.rc-node {
+  align-self: center;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f8f6f2;
+  border: 2px solid rgba(27, 27, 31, 0.3);
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  z-index: 1;
+}
+.rc-item.is-active .rc-node {
+  background: var(--rc-gold);
+  border-color: var(--rc-gold);
+  box-shadow: 0 0 0 5px rgba(245, 188, 39, 0.22);
+}
+
+/* segment from this node to the next one */
+.rc-seg {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: calc(100% + var(--rc-gap));
+  height: 2px;
+  background: var(--rc-line);
+  transition: background 0.25s ease;
+}
+.rc-item.seg-on .rc-seg {
+  background: var(--rc-gold);
+}
+
+.rc-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  padding: 24px;
+  font: inherit;
+  text-align: left;
+  color: var(--charcoal, #1b1b1f);
+  background: #fff;
+  border: 1px solid rgba(27, 27, 31, 0.12);
+  border-radius: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+/* gold corner accent */
+.rc-card::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 28px;
+  height: 28px;
+  border-top: 3px solid var(--rc-gold);
+  border-right: 3px solid var(--rc-gold);
+  border-top-right-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.rc-item.is-active .rc-card {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(245, 188, 39, 0.9);
+  box-shadow: 0 0 0 1px rgba(245, 188, 39, 0.35), 0 22px 36px -24px rgba(27, 27, 31, 0.5);
+}
+.rc-item.is-active .rc-card::after {
+  opacity: 1;
+}
+.rc-card:focus-visible {
+  outline: 2px solid var(--rc-gold);
+  outline-offset: 3px;
+}
+
+.rc-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+.rc-title {
+  font-size: var(--t-h3, 1.375rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+.rc-desc {
+  font-size: var(--t-body, 1rem);
+  line-height: 1.55;
+  color: rgba(27, 27, 31, 0.72);
+  transition: color 0.25s ease;
+}
+.rc-item.is-active .rc-desc {
+  color: var(--charcoal, #1b1b1f);
+}
+
+/* travelling pulse: positioned by Framer Motion (x / y in px from the chain's top-left) */
+.rc-pulse {
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--rc-gold);
+  box-shadow: 0 0 0 4px rgba(245, 188, 39, 0.25), 0 0 18px 4px rgba(245, 188, 39, 0.55);
+  pointer-events: none;
+}
+
+/* mobile / narrow: vertical chain, line on the left */
+@media (max-width: 899px) {
+  .rc-chain {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 36px;
+  }
+  .rc-item {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .rc-node {
+    position: absolute;
+    left: -36px;
+    top: 30px;
+    margin-left: -7px;
+    align-self: auto;
+  }
+  .rc-seg {
+    top: 36px;
+    left: -1px;
+    margin-left: -36px;
+    width: 2px;
+    height: calc(100% + var(--rc-gap));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-card,
+  .rc-card::after,
+  .rc-node,
+  .rc-seg {
+    transition: none;
+  }
+  .rc-item.is-active .rc-card {
+    transform: none;
+  }
+}

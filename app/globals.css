@@ -5,7 +5,7 @@
 
 :root {
   /* Brand */
-  --augent-brand-purple: #0099CC;
+  --augent-brand-purple: #C9960C;
   --augent-purple-70: #121417;
   --augent-purple-90: #0B0C0E;
   --augent-purple-10: #E8F4FF;
@@ -15,11 +15,11 @@
   --augent-purple-light: #23272D;
 
   /* Gold */
-  --augent-brand-gold: #00C2FF;
+  --augent-brand-gold: #F5BC27;
   --augent-gold-10: #E8F4FF;
   --augent-gold-30: #CFE8FA;
-  --augent-gold-60: #0099CC;
-  --augent-gold-70: #0077AD;
+  --augent-gold-60: #C9960C;
+  --augent-gold-70: #8A6500;
   --augent-gold-90: #121417;
 
   /* Neutrals */
@@ -1470,7 +1470,7 @@ textarea {
 .text-field:focus {
   outline: none;
   border-color: var(--augent-brand-gold);
-  box-shadow: 0 0 0 3px rgba(0, 194, 255, 0.35);
+  box-shadow: 0 0 0 3px rgba(245, 188, 39, 0.35);
 }
 
 textarea.text-field {

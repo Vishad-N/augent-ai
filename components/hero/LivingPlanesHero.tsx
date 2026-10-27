@@ -248,7 +248,7 @@ function TitleLine({
   }, []);
   const lx = useTransform(x, (v) => v - off.current.l);
   const ly = useTransform(y, (v) => v - off.current.t);
-  const backgroundImage = useMotionTemplate`radial-gradient(260px circle at ${lx}px ${ly}px, rgba(90, 216, 255, ${alpha}) 0%, rgba(0, 194, 255, 0) 70%), linear-gradient(#fff, #fff)`;
+  const backgroundImage = useMotionTemplate`radial-gradient(260px circle at ${lx}px ${ly}px, rgba(255, 211, 92, ${alpha}) 0%, rgba(245, 188, 39, 0) 70%), linear-gradient(#fff, #fff)`;
 
   return (
     <span className="ht-mask">

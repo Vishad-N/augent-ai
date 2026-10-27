@@ -76,7 +76,7 @@ const DEFAULTS = {
   rotation: 0,
   mirror: false,
   dotSize: 100,
-  ringColor: "#00c2ff",
+  ringColor: "#F5BC27",
   ringEdgeColor: "#E8F4FF",
   ribbonColor: "#DFC580",
   reach: 10,

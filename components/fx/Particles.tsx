@@ -50,7 +50,7 @@ export default function Particles({ count = 22, mobileCount = 8, className }: Pr
           p.phase += dt * 0.0011;
         }
         const alpha = p.a * (0.6 + 0.4 * Math.sin(p.phase));
-        ctx.fillStyle = `rgba(0,194,255,${alpha.toFixed(3)})`; // Electric Blue specks
+        ctx.fillStyle = `rgba(245, 188, 39,${alpha.toFixed(3)})`; // Electric Blue specks
         ctx.beginPath();
         ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
         ctx.fill();

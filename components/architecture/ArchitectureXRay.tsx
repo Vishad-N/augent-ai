@@ -96,6 +96,15 @@ export default function ArchitectureXRay() {
     handle.current?.setFocus(focus);
   }, [focus, ready]);
 
+  // Autoplay begins on the top layer (index 0) as soon as the section is seen,
+  // rather than idling on the overview for a full interval first.
+  const started = useRef(false);
+  useEffect(() => {
+    if (!auto || !inView || started.current) return;
+    started.current = true;
+    setSelected((s) => s ?? 0);
+  }, [auto, inView]);
+
   // Autoplay: step to the next layer every CYCLE_MS. Hovering pauses it; leaving
   // resumes with a full interval. Any selection change restarts the countdown.
   useEffect(() => {
