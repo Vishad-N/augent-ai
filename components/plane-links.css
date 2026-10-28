@@ -1,0 +1,262 @@
+/* Structured System: four animated lines link each plane card to the
+   back edge of the illustration. Faint by default, gold when the card is
+   active. Self-contained: .pl-* and .plane-stage* only. */
+
+.planes-tabs {
+  position: relative;
+}
+
+/* ---------- illustration "back plate" ---------- */
+.plane-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 40rem;
+  border-radius: 28px;
+  /* Deep charcoal: the artwork is mostly pale (docs, light-blue panels), so it needs a
+     dark ground to reach >= 3:1 non-text contrast. A lifted centre keeps the few
+     dark elements (shield, monitor, hair) from merging into the plate. */
+  background:
+    radial-gradient(circle at 50% 42%, #353740 0%, rgba(53, 55, 64, 0) 62%),
+    linear-gradient(160deg, #1d1e24, #111216);
+  border: 1px solid rgba(245, 188, 39, 0.3);
+  box-shadow: 0 24px 50px -28px rgba(17, 18, 22, 0.55);
+  transition: border-color 400ms ease, box-shadow 400ms ease;
+}
+
+/* soft gold highlight on the linked illustration */
+.planes-tabs:has(.plane-tab.active) .plane-stage {
+  border-color: rgba(245, 188, 39, 0.75);
+  box-shadow: 0 0 0 1px rgba(245, 188, 39, 0.25), 0 0 64px -14px rgba(245, 188, 39, 0.55),
+    0 24px 50px -28px rgba(17, 18, 22, 0.55);
+}
+
+.plane-stage-art {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* slightly richer colour + a hairline light rim so every shape keeps a readable edge */
+.plane-stage-art {
+  filter: saturate(1.08) drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+}
+
+.plane-stage-art .lottie {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+}
+
+/* ---------- connector overlay ---------- */
+.pl-overlay {
+  display: none;
+}
+
+.pl-line,
+.pl-shadow,
+.pl-flow,
+.pl-draw {
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* the drawn-in gold stroke only exists for the active card */
+.pl-draw {
+  stroke: #f5bc27;
+  stroke-width: calc(1px + var(--d) * 1.1px);
+  stroke-linecap: butt; /* no stray dot while the dash is fully hidden */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  visibility: hidden;
+}
+
+.pl-line {
+  stroke: #f5bc27;
+  stroke-opacity: calc(0.1 + var(--d) * 0.12);
+  stroke-width: calc(0.6px + var(--d) * 0.7px);
+  transition: stroke-opacity 400ms ease, stroke-width 400ms ease;
+}
+
+.pl-shadow {
+  stroke: #1b1b1f;
+  stroke-opacity: 0;
+  stroke-width: calc(1px + var(--d) * 2px);
+  filter: blur(3px);
+  transition: stroke-opacity 400ms ease;
+}
+
+.pl-flow {
+  stroke: #ffd35c;
+  stroke-width: calc(1px + var(--d) * 1.1px);
+  stroke-dasharray: 5 19;
+  stroke-opacity: 0;
+  transition: stroke-opacity 400ms ease;
+}
+
+.pl-start {
+  fill: #f5bc27;
+  fill-opacity: 0.25;
+  transition: fill-opacity 400ms ease;
+}
+
+.pl-port ellipse {
+  fill: rgba(245, 188, 39, 0.12);
+  stroke: #f5bc27;
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+  transition: fill 400ms ease, stroke-opacity 400ms ease;
+}
+
+.pl-port circle {
+  fill: #f5bc27;
+  fill-opacity: 0.5;
+  transition: fill-opacity 400ms ease;
+}
+
+/* active card: its four lines turn gold, brighten and flow towards the plate */
+.pl-card.is-on .pl-line {
+  stroke-opacity: calc(0.18 + var(--d) * 0.14); /* the track the gold line is drawn along */
+  stroke-width: calc(1px + var(--d) * 1.1px);
+}
+.pl-card.is-on .pl-draw {
+  visibility: visible;
+  /* each line leaves the card a beat after the previous one: top route first */
+  animation: pl-draw 900ms cubic-bezier(0.45, 0, 0.2, 1) calc(var(--k) * 140ms) both;
+}
+.pl-card.is-on .pl-shadow {
+  stroke-opacity: calc(var(--d) * 0.1);
+}
+.pl-card.is-on .pl-flow {
+  /* the travelling dashes start only once the line has reached its port */
+  animation:
+    pl-flow 1.4s linear infinite,
+    pl-appear 400ms ease calc(1100ms + var(--k) * 140ms) both;
+}
+.pl-card.is-on .pl-start {
+  fill-opacity: 1;
+}
+
+.planes-tabs:has(.plane-tab.active) .pl-port ellipse {
+  fill: rgba(245, 188, 39, 0.3);
+  stroke-opacity: 1;
+}
+.planes-tabs:has(.plane-tab.active) .pl-port circle {
+  fill-opacity: 1;
+}
+
+@keyframes pl-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes pl-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pl-appear {
+  from {
+    stroke-opacity: 0;
+  }
+  to {
+    stroke-opacity: 0.9;
+  }
+}
+
+/* port "receives" the line: a ripple ring expands from it as the line lands */
+.pl-port ellipse {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.planes-tabs:has(.plane-tab.active) .pl-port ellipse {
+  animation: pl-port-hit 700ms ease-out calc(700ms + var(--k) * 140ms) both;
+}
+@keyframes pl-port-hit {
+  0% {
+    transform: scale(1);
+    stroke-opacity: 0.35;
+  }
+  45% {
+    transform: scale(1.7);
+    stroke-opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    stroke-opacity: 1;
+  }
+}
+
+/* active card gets a gold edge to match its lines */
+.plane-tab.active {
+  box-shadow: 0 0 0 1px rgba(245, 188, 39, 0.8), 0 10px 24px -12px rgba(245, 188, 39, 0.45);
+}
+
+@media (min-width: 992px) {
+  .plane-stage {
+    max-width: 34rem;
+  }
+  .planes-tabs {
+    gap: clamp(6rem, 12vw, 10rem);
+    align-items: center;
+  }
+  .planes-tabs .planes-menu {
+    width: 36%;
+    flex: none;
+    position: relative;
+    z-index: 1;
+  }
+  .planes-tabs .planes-content {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+  .pl-overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 2;
+  }
+}
+
+/* Mobile: no connectors; the plate just frames the illustration. */
+@media (max-width: 991px) {
+  .plane-stage {
+    max-width: 26rem;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-card.is-on .pl-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .pl-card.is-on .pl-flow {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-opacity: 0;
+  }
+  .planes-tabs:has(.plane-tab.active) .pl-port ellipse {
+    animation: none;
+  }
+  .plane-stage,
+  .pl-line,
+  .pl-shadow,
+  .pl-flow,
+  .pl-port ellipse {
+    transition: none;
+  }
+}

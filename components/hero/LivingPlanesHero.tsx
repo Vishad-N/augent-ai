@@ -106,11 +106,12 @@ export default function LivingPlanesHero({ fx: fxOverride }: { fx?: Partial<Fx> 
       <div className="container lp-grid">
         <motion.div className="lp-copy" style={{ x: copyX, y: copyY }}>
           <StaggerTitle text={hero.title} animateIn={fx.headlineStagger && !reduce} onLanded={onLanded} />
-          {/* Kept in the DOM (and in the layout) from the start: no CLS, still indexable. */}
+          {/* Kept in the DOM (and in the layout) from the start: no CLS, still indexable.
+              Never hidden with opacity: it is the LCP element, so it must paint with the first frame. */}
           <motion.p
             className="hero-subtitle"
             initial={false}
-            animate={{ opacity: showSubtitle ? 1 : 0, y: showSubtitle ? 0 : 8 }}
+            animate={{ opacity: 1, y: showSubtitle ? 0 : 8 }}
             transition={{ duration: 0.6, ease }}
           >
             {hero.subtitle}

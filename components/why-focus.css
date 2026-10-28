@@ -1,0 +1,253 @@
+/* "Why AuGENT?" focus cards: hovered/tapped card lifts, the rest recede.
+   Frosted-glass cards over soft gold and purple light, gold-to-purple accents.
+   Self-contained: only .wf-* classes. */
+
+.wf-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+/* light the glass refracts */
+.wf-orb {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(48px);
+  pointer-events: none;
+}
+.wf-orb-a {
+  width: 26rem;
+  height: 26rem;
+  top: -4rem;
+  left: -5rem;
+  background: radial-gradient(circle, #f5bc27 0%, rgba(245, 188, 39, 0) 70%);
+  opacity: 0.85;
+}
+.wf-orb-b {
+  width: 22rem;
+  height: 22rem;
+  top: 38%;
+  right: 8%;
+  background: radial-gradient(circle, #7c3aed 0%, rgba(124, 58, 237, 0) 70%);
+  opacity: 0.6;
+}
+.wf-orb-c {
+  width: 24rem;
+  height: 24rem;
+  bottom: -5rem;
+  left: 30%;
+  background: radial-gradient(circle, #9b6dff 0%, rgba(155, 109, 255, 0) 70%);
+  opacity: 0.55;
+}
+.wf-orb-d {
+  width: 20rem;
+  height: 20rem;
+  top: -3rem;
+  right: -2rem;
+  background: radial-gradient(circle, #ffb43a 0%, rgba(255, 180, 58, 0) 70%);
+  opacity: 0.6;
+}
+@property --wf-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.wf-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.wf-cell {
+  display: flex;
+}
+
+.wf-card {
+  --wf-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 15rem;
+  padding: 2rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(236, 226, 255, 0.28));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px rgba(31, 38, 60, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  color: #1b1b1f;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 400ms var(--wf-ease),
+    filter 400ms var(--wf-ease),
+    border-color 400ms var(--wf-ease),
+    background 400ms var(--wf-ease),
+    box-shadow 400ms var(--wf-ease);
+}
+
+.wf-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 0.5rem;
+  color: #c9960c;
+  transform-origin: 50% 50%; /* pivot: the icon's own centre */
+  transform: perspective(500px) rotateY(0deg);
+}
+
+.wf-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.wf-card h3 {
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #1b1b1f;
+}
+
+.wf-card p {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(27, 27, 31, 0.78);
+}
+
+/* focused card */
+.wf-card[data-state="active"] {
+  transform: scale(1.05);
+  border-color: rgba(245, 188, 39, 0.5);
+  background: linear-gradient(135deg, rgba(255, 246, 220, 0.8), rgba(228, 214, 255, 0.45));
+  box-shadow:
+    0 24px 48px -20px rgba(124, 58, 237, 0.4),
+    0 0 28px -6px rgba(245, 188, 39, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  z-index: 1;
+}
+
+/* a gold highlight that revolves around the border (1px ring cut out with a mask) */
+.wf-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--wf-angle),
+    rgba(245, 188, 39, 0) 0deg,
+    rgba(124, 58, 237, 0) 200deg,
+    #7c3aed 265deg,
+    #f5bc27 320deg,
+    #ffd35c 352deg,
+    rgba(255, 211, 92, 0) 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--wf-ease);
+}
+
+.wf-card[data-state="active"]::before {
+  opacity: 1;
+  animation: wf-orbit 2.4s linear infinite;
+}
+
+@keyframes wf-orbit {
+  to {
+    --wf-angle: 360deg;
+  }
+}
+
+/* icon flips once around its vertical (Y) axis each time the card is focused */
+.wf-card[data-state="active"] .wf-icon {
+  animation: wf-flip 800ms cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+@keyframes wf-flip {
+  from {
+    transform: perspective(500px) rotateY(0deg);
+  }
+  to {
+    transform: perspective(500px) rotateY(360deg);
+  }
+}
+
+/* everyone else recedes */
+.wf-card[data-state="dim"] {
+  transform: scale(0.96);
+  filter: blur(4px);
+}
+
+.wf-card:focus-visible {
+  box-shadow: 0 0 0 3px rgba(245, 188, 39, 0.5);
+}
+
+@media (max-width: 767px) {
+  .wf-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .wf-card {
+    min-height: 0;
+    padding: 1.5rem;
+  }
+  .wf-icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Reduced motion: no scale, blur, orbit or flip; just a dim and a still gold border. */
+@media (prefers-reduced-motion: reduce) {
+  .wf-card,
+  .wf-card[data-state="active"],
+  .wf-card[data-state="dim"] {
+    transform: none;
+    filter: none;
+    transition: border-color 150ms linear, opacity 150ms linear;
+  }
+  .wf-card[data-state="dim"] {
+    opacity: 0.6;
+  }
+  .wf-card[data-state="active"] {
+    border-color: #f5bc27;
+  }
+  .wf-card[data-state="active"]::before,
+  .wf-card[data-state="active"] .wf-icon {
+    animation: none;
+  }
+  .wf-card[data-state="active"]::before {
+    opacity: 0;
+  }
+}
+
+/* No backdrop-filter support: fall back to a more opaque frosted panel. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .wf-card {
+    background: rgba(255, 255, 255, 0.88);
+  }
+}
+
+@media (max-width: 767px) {
+  .wf-orb-a,
+  .wf-orb-b,
+  .wf-orb-c,
+  .wf-orb-d {
+    width: 14rem;
+    height: 14rem;
+  }
+  .wf-orb-b {
+    top: 45%;
+    right: -3rem;
+  }
+}

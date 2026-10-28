@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { footer } from "@/data/content";
 import SwapWordmark from "./fx/SwapWordmark";
 import HaloSpray from "./fx/HaloSpray";
@@ -8,7 +9,7 @@ export default function Footer() {
     <footer className="footer">
       {/* full-width particle halo with the logo sitting inside the ring */}
       <HaloSpray className="footer-halo" scale={150}>
-        <a href="#hero" className="footer-halo-logo" aria-label="AuGENT, back to top">
+        <a href="/#hero" className="footer-halo-logo" aria-label="AuGENT, back to top">
           {/* the logo, split so GENT can run a continuous letter swap */}
           <SwapWordmark color="#ffffff" />
         </a>
@@ -21,9 +22,9 @@ export default function Footer() {
             <LayeredSocials className="footer-socials" />
             <div className="footer-legal">
               {footer.legal.map((l) => (
-                <a key={l} href="#">
-                  {l}
-                </a>
+                <Link key={l.href} href={l.href}>
+                  {l.label}
+                </Link>
               ))}
             </div>
           </div>

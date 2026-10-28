@@ -1823,7 +1823,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--circles) 50% / cover no-repeat;
+  background: var(--circles, none) 50% / cover no-repeat;
   filter: grayscale(1) brightness(0.75);
   opacity: 0.9;
   pointer-events: none;

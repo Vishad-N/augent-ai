@@ -412,6 +412,14 @@ export const whyAugent = [
   "No disconnected systems",
 ];
 
+/** One supporting line per point above, in the same order (index matches whySvgs). */
+export const whyAugentDetails = [
+  "Deploy on-prem or in your VPC, with full control over models and deployment.",
+  "A secure GenAI execution layer with full control over your data.",
+  "Control usage by team, domain, or cost center, not by headcount.",
+  "One connected layer from data ingestion to decision execution.",
+];
+
 export const whoUsesSection = {
   heading: { before: "Who Uses ", accent: "AuGENT?" },
   footer: "Discover How Enterprises Like Yours Operationalize AI with AuGENT",
@@ -520,5 +528,9 @@ export const footer = {
     { label: "Facebook", href: "https://www.facebook.com/SoothsayerAnalytics" },
     { label: "YouTube", href: "https://www.youtube.com/@SoothsayerAnalytics" },
   ],
-  legal: ["Privacy Policy", "Terms of Service", "Cookie Policy"],
+  legal: [
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms-of-service" },
+    { label: "Cookie Policy", href: "/cookie-policy" },
+  ],
 };

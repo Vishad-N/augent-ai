@@ -1,0 +1,17 @@
+# AuGENT
+
+> AuGENT is an enterprise AI platform by Soothsayer Analytics for secure, governed GenAI workflows: document processing, ideation-to-requirement, and sales agents, with control over data, models and deployment.
+
+## Site
+
+- [Home](https://www.augent.ai/): Platform overview, solutions, core capabilities, use cases, architecture and philosophy.
+
+## Legal
+
+- [Privacy Policy](https://www.augent.ai/privacy-policy): What personal data the website collects, how it is used and shared, retention, and user rights.
+- [Terms of Service](https://www.augent.ai/terms-of-service): Terms governing use of the AuGENT.ai website.
+- [Cookie Policy](https://www.augent.ai/cookie-policy): Cookie types used on the website and how to control them.
+
+## Publisher
+
+Soothsayer Analytics. Contact via the form at https://www.augent.ai/#cta

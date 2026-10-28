@@ -40,6 +40,7 @@ export default function ArchitectureXRay() {
   const [paused, setPaused] = useState(false);
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
+  const [bgOn, setBgOn] = useState(false);
 
   useEffect(() => {
     if (reduce) setAuto(false);
@@ -59,6 +60,7 @@ export default function ArchitectureXRay() {
       async ([e]) => {
         if (!e.isIntersecting || handle.current) return;
         io.disconnect();
+        setBgOn(true); // the 500 KB backdrop is fetched only now, not at page load
         try {
           const { createXRay } = await import("@/lib/xrayScene");
           if (cancelled) return;
@@ -127,7 +129,7 @@ export default function ArchitectureXRay() {
       ref={sectionRef}
       id="architecture"
       className="architecture xray padding-global section-medium"
-      style={{ ["--circles" as string]: `url("${architecture.circles}")` }}
+      style={bgOn ? { ["--circles" as string]: `url("${architecture.circles}")` } : undefined}
     >
       <Particles count={14} mobileCount={5} />
       <div className="container">

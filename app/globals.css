@@ -59,7 +59,7 @@
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
 
-  --header-h: 6.5rem;
+  --header-h: 4.5rem; /* 72px; shrinks to 64px once scrolled */
 }
 
 /* ---------- Base ---------- */
@@ -326,14 +326,24 @@ textarea {
   height: var(--header-h);
   display: flex;
   align-items: center;
-  transition: background-color var(--transition-normal), box-shadow var(--transition-normal);
+  transition: height var(--transition-normal), background-color var(--transition-normal),
+    box-shadow var(--transition-normal);
 }
 
 .header.scrolled,
 .header.menu-open {
   background-color: var(--augent-white);
-  box-shadow: 0 1px 0.2px #00000006, 0 4.3px 1.6px #00000007, 0 10.6px 5px #00000008,
-    0 27.1px 14.3px #00000008, 0 84px 47.1px #00000009;
+  /* a thin gold hairline plus one soft shadow, instead of the old five-layer stack */
+  box-shadow: 0 1px 0 rgba(245, 188, 39, 0.55), 0 8px 24px -14px rgba(0, 0, 0, 0.22);
+}
+
+/* on scroll the bar gets 8px slimmer (the open mobile menu keeps the full height it is anchored to) */
+.header.scrolled {
+  height: calc(var(--header-h) - 8px);
+}
+
+.header.menu-open {
+  height: var(--header-h);
 }
 
 .header-inner {
@@ -346,14 +356,19 @@ textarea {
   margin: 0 auto;
 }
 
-/* Live site: the logo fills the first grid column (≈278×43 at full width). */
+/* Slimmer bar: the logo tops out at ≈216×33 (was 278×43) and eases down a little more on scroll. */
 .header-logo {
   position: relative;
   display: block;
   width: 100%;
   min-width: 0;
-  max-width: 278px;
+  max-width: 216px;
   aspect-ratio: 278 / 43;
+  transition: max-width var(--transition-normal);
+}
+
+.header.scrolled .header-logo {
+  max-width: 196px;
 }
 
 @media (max-width: 991px) {
@@ -395,8 +410,8 @@ textarea {
 .nav-link {
   color: var(--augent-white);
   letter-spacing: 0.25px;
-  margin: 0 5px;
-  padding: 10px 20px;
+  margin: 0 4px;
+  padding: 8px 16px;
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 20px;
@@ -417,6 +432,20 @@ textarea {
 .header-cta {
   display: flex;
   justify-content: flex-end;
+}
+
+/* Tighter "Schedule a Demo": 40px tall (was 48px), same gold shape and weight. */
+.header-cta .cta-btn {
+  height: 2.5rem;
+}
+
+.header-cta .cta-btn-label {
+  padding: 0.4rem 0.9rem;
+  padding-right: 2rem;
+}
+
+.header-cta .cta-btn-arrow {
+  width: 2.25rem;
 }
 
 .menu-button {
@@ -1129,7 +1158,7 @@ textarea {
    Architecture
    ========================================================= */
 .architecture {
-  background-image: var(--circles), linear-gradient(0deg, #1F2328, #0B0C0E);
+  background-image: var(--circles, none), linear-gradient(0deg, #1F2328, #0B0C0E);
   background-position: 50%, 0 0;
   background-repeat: no-repeat, repeat;
   background-size: cover, auto;
@@ -1773,7 +1802,7 @@ textarea.text-field {
 
 @media (max-width: 767px) {
   :root {
-    --header-h: 5rem;
+    --header-h: 4rem; /* 64px */
   }
 
   .padding-global {
