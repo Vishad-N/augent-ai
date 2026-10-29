@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 
 type Props = {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ type Props = {
 /** Fade + slide-up on scroll, matching the live site's Webflow IX2 reveals. */
 export default function Reveal({ children, className, delay = 0, y = 32, as = "div", ack, touch }: Props) {
   const reduce = useReducedMotion();
-  const Comp = motion[as];
+  const Comp = m[as];
   return (
     <Comp
       className={className}

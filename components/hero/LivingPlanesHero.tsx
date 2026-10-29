@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
-  motion,
+  m,
   MotionValue,
   useMotionTemplate,
   useMotionValueEvent,
@@ -17,6 +17,7 @@ import { AU_PULSE_EVENT, HERO_FX } from "@/lib/heroFx";
 import { usePointerParallax } from "@/hooks/usePointerParallax";
 import { usePointerLocal } from "@/hooks/usePointerLocal";
 import { useMagnetic } from "@/hooks/useMagnetic";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import CtaButton from "../CtaButton";
 import HeroBackground from "./HeroBackground";
 import PlaneStack from "./PlaneStack";
@@ -83,6 +84,8 @@ export default function LivingPlanesHero({ fx: fxOverride }: { fx?: Partial<Fx> 
   const stackY = useTransform(py, (v) => (fx.stackParallax ? v * 8 : 0));
 
   // CTA glow: flares once, for ~1s, on the first mouse move inside the hero
+  // the idle float only runs where the desktop stack is actually shown
+  const desktop = useMediaQuery("(min-width: 768px)");
   const [flare, setFlare] = useState(false);
   const flared = useRef(false);
   const onHeroPointerMove = (e: React.PointerEvent) => {
@@ -104,40 +107,40 @@ export default function LivingPlanesHero({ fx: fxOverride }: { fx?: Partial<Fx> 
       <HeroBackground signalField={fx.signalField} />
 
       <div className="container lp-grid">
-        <motion.div className="lp-copy" style={{ x: copyX, y: copyY }}>
+        <m.div className="lp-copy" style={{ x: copyX, y: copyY }}>
           <StaggerTitle text={hero.title} animateIn={fx.headlineStagger && !reduce} onLanded={onLanded} />
           {/* Kept in the DOM (and in the layout) from the start: no CLS, still indexable.
               Never hidden with opacity: it is the LCP element, so it must paint with the first frame. */}
-          <motion.p
+          <m.p
             className="hero-subtitle"
             initial={false}
             animate={{ opacity: 1, y: showSubtitle ? 0 : 8 }}
             transition={{ duration: 0.6, ease }}
           >
             {hero.subtitle}
-          </motion.p>
-        </motion.div>
+          </m.p>
+        </m.div>
 
         <div className="lp-viz">
-          <motion.div
+          <m.div
             className="viz-desktop"
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.2 }}
           >
-            <motion.div className="stack-live" style={reduce ? undefined : { x: stackX, y: stackY }}>
-              <motion.div
+            <m.div className="stack-live" style={reduce ? undefined : { x: stackX, y: stackY }}>
+              <m.div
                 className="stack-float"
-                animate={fx.stackFloat && !reduce ? { y: [0, -9, 0], rotate: [0, 0.6, 0] } : undefined}
+                animate={fx.stackFloat && !reduce && desktop ? { y: [0, -9, 0], rotate: [0, 0.6, 0] } : undefined}
                 transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
               >
                 <PlaneStack active={active} onActivate={activate} onSelect={select} />
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
 
             <div id="plane-readout" className="plane-readout" aria-live="polite">
               <AnimatePresence mode="wait" initial={false}>
-                <motion.div
+                <m.div
                   key={current?.id ?? "idle"}
                   initial={reduce ? false : { opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -154,17 +157,17 @@ export default function LivingPlanesHero({ fx: fxOverride }: { fx?: Partial<Fx> 
                   ) : (
                     <p className="readout-text idle">{structuredSystem.subtitle}</p>
                   )}
-                </motion.div>
+                </m.div>
               </AnimatePresence>
             </div>
-          </motion.div>
+          </m.div>
 
           <div className="viz-mobile">
             <PlaneCarousel onEngage={() => undefined} onExplore={select} />
           </div>
         </div>
 
-        <motion.div
+        <m.div
           className="lp-cta"
           initial={reduce ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -178,7 +181,7 @@ export default function LivingPlanesHero({ fx: fxOverride }: { fx?: Partial<Fx> 
           <Magnetic>
             <CtaButton label={hero.secondaryCta.label} href={hero.secondaryCta.href} variant="alternate" noArrow />
           </Magnetic>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );
@@ -196,9 +199,16 @@ function StaggerTitle({ text, animateIn, onLanded }: { text: string; animateIn: 
   const { x, y, near } = usePointerLocal(ref, 220);
   const alpha = useTransform(near, [0, 1], [0, 0.9]);
 
-  // Without the entrance there's nothing to wait for.
+  // Without the entrance there's nothing to wait for. With it, the CSS animation may already have
+  // finished before hydration (no animationend to catch), so land on the remaining time.
   useEffect(() => {
-    if (!animateIn) onLanded();
+    if (!animateIn) {
+      onLanded();
+      return;
+    }
+    const total = (LINE_DELAY + (lines.length - 1) * LINE_STAGGER + 0.95) * 1000;
+    const t = window.setTimeout(onLanded, Math.max(0, total - performance.now()));
+    return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animateIn]);
 
@@ -253,17 +263,17 @@ function TitleLine({
 
   return (
     <span className="ht-mask">
-      <motion.span
+      <m.span
         ref={ref}
         className="ht-line"
-        style={{ backgroundImage }}
-        initial={animateIn ? { y: "110%" } : false}
-        animate={{ y: "0%" }}
-        transition={{ type: "spring", stiffness: 120, damping: 20, mass: 0.9, delay: LINE_DELAY + index * LINE_STAGGER }}
-        onAnimationComplete={onDone}
+        // the rise is a CSS animation (see .hero-stagger in living.css): it runs from the first
+        // paint, without waiting for hydration, so the headline is the LCP element
+        data-rise={animateIn ? "" : undefined}
+        style={{ backgroundImage, ["--i" as string]: index }}
+        onAnimationEnd={onDone}
       >
         {text}
-      </motion.span>
+      </m.span>
     </span>
   );
 }
@@ -273,8 +283,8 @@ function Magnetic({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLSpanElement>(null);
   const { x, y } = useMagnetic(ref, { radius: 60, strength: 0.22, max: 8 });
   return (
-    <motion.span ref={ref} className="magnetic" style={{ x, y }}>
+    <m.span ref={ref} className="magnetic" style={{ x, y }}>
       {children}
-    </motion.span>
+    </m.span>
   );
 }

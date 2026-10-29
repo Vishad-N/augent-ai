@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { m, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { planes } from "@/data/content";
 import CircuitTrace from "./CircuitTrace";
 
@@ -73,13 +73,13 @@ export default function PlaneStack({ active, onActivate, onSelect }: Props) {
     <div ref={stageRef} className="stack-stage" onPointerMove={onPointerMove} onPointerLeave={onPointerLeave}>
       <div className="stack-shadow" aria-hidden="true" />
 
-      <motion.div className="stack-tilt" style={{ rotateX, rotateY }}>
+      <m.div className="stack-tilt" style={{ rotateX, rotateY }}>
         <div className="stack-iso">
           {planes.map((p, i) => {
             const isActive = active === i;
             const dimmed = active !== null && !isActive;
             return (
-              <motion.div
+              <m.div
                 key={p.id}
                 className={`plane-layer l${i} ${isActive ? "is-active" : ""}`}
                 initial={reduce ? false : { z: DEPTH[i] - 60, opacity: 0 }}
@@ -92,11 +92,11 @@ export default function PlaneStack({ active, onActivate, onSelect }: Props) {
                 <CircuitTrace variant={i} active={isActive} />
                 {/* faint gold light running along the edges of the active plane */}
                 <span className="plane-edge" />
-              </motion.div>
+              </m.div>
             );
           })}
         </div>
-      </motion.div>
+      </m.div>
 
       <div className="stack-labels">
         {planes.map((p, i) => (

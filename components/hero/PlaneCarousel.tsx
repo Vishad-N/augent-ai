@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { CaretDown } from "@phosphor-icons/react";
 import { planes } from "@/data/content";
 import CtaButton from "../CtaButton";
@@ -77,7 +77,7 @@ export default function PlaneCarousel({ onEngage, onExplore }: Props) {
 
               <AnimatePresence initial={false}>
                 {isOpen && (
-                  <motion.div
+                  <m.div
                     id={`plane-card-body-${p.id}`}
                     className="plane-card-body"
                     initial={reduce ? false : { height: 0, opacity: 0 }}
@@ -97,7 +97,7 @@ export default function PlaneCarousel({ onEngage, onExplore }: Props) {
                         }}
                       />
                     </div>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>

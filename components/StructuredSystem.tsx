@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useMotionValue, useTransform } from "framer-motion";
+import { AnimatePresence, m, useInView, useMotionValue, useTransform } from "framer-motion";
 import { planes, structuredSystem } from "@/data/content";
 import { STRUCTURED_SECTION_ID, usePlaneFocus } from "@/lib/planeBus";
 import { usePageVisible } from "@/hooks/usePageVisible";
@@ -150,7 +150,7 @@ export default function StructuredSystem() {
                   </span>
                   <p>{p.description}</p>
                   <span className="plane-progress" aria-hidden="true">
-                    <motion.span style={{ width: active === i ? barWidth : 0 }} />
+                    <m.span style={{ width: active === i ? barWidth : 0 }} />
                   </span>
                 </button>
               </Reveal>
@@ -161,7 +161,7 @@ export default function StructuredSystem() {
             {/* The "back plate" of the illustration: the four lines land on its left edge. */}
             <div ref={stageRef} className="plane-stage">
               <AnimatePresence mode="wait">
-                <motion.div
+                <m.div
                   key={planes[active].id}
                   // No rotate/perspective here: a transformed ancestor makes dotlottie mis-size its
                   // canvas and throw ImageData errors. The linked plate is highlighted with a glow instead.
@@ -172,7 +172,7 @@ export default function StructuredSystem() {
                   transition={{ duration: 0.4 }}
                 >
                   <Lottie src={planes[active].lottie} />
-                </motion.div>
+                </m.div>
               </AnimatePresence>
             </div>
           </div>

@@ -43,27 +43,19 @@
   font-weight: 300;
   line-height: 1.12;
 }
-.heading-title,
-.solution-title,
-.architecture-heading .heading-title,
-.cap-heading .heading-title {
+.heading-title {
   font-size: var(--t-h2);
   font-weight: 400;
   line-height: 1.2;
 }
-.problem-card h3,
-.why-card h3,
-.cap-title {
+.problem-card h3 {
   font-size: var(--t-h3);
   font-weight: 500;
   line-height: 1.25;
 }
 .hero-subtitle,
 .heading-paragraph,
-.solution-subtitle,
 .problem-card p,
-.cap-desc,
-.why-card p,
 .who-desc {
   font-size: var(--t-body);
   line-height: 1.55;
@@ -124,8 +116,6 @@
 }
 .solutions .heading-title,
 .solutions .heading-paragraph,
-.solutions .solution-title,
-.solutions .solution-subtitle,
 .architecture .heading-title,
 .architecture .heading-paragraph,
 .who .heading-title,
@@ -144,48 +134,33 @@
 }
 
 /* ---------- Equal-height cards, consistent padding ---------- */
-.cap-grid,
-.problem-grid,
-.why-list {
+.problem-grid {
   align-items: stretch;
 }
-.cap-cell,
-.cap-tile,
-.problem-card,
-.why-card {
+.problem-card {
   height: 100%;
 }
-.cap-tile,
-.problem-card,
-.why-card {
+.problem-card {
   padding: var(--s4);
   gap: var(--s2);
   border-radius: 16px;
-}
-.cap-tile {
-  background: linear-gradient(160deg, #1f1f23, var(--dark));
 }
 .who-grid {
   gap: var(--s3);
 }
 
 /* ---------- Interactive feedback ---------- */
-.cap-tile,
 .problem-card,
-.why-card,
 .who-card {
   transition: transform 0.25s var(--ease-out, ease), border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .problem-card:hover,
-.why-card:hover,
 .who-card:hover,
 .who-card:focus-visible {
   transform: translateY(-4px);
   box-shadow: 0 0 0 1px rgba(245, 188, 39, 0.6), 0 18px 36px -24px rgba(0, 0, 0, 0.55);
 }
 .problem-card:active,
-.why-card:active,
-.cap-tile:active,
 .who-card:active {
   transform: translateY(-1px) scale(0.99);
 }
@@ -232,9 +207,7 @@
   textarea {
     min-height: 48px;
   }
-  .cap-tile.cap-tile,
-  .problem-card,
-  .why-card {
+  .problem-card {
     padding: var(--s3);
   }
 }
@@ -252,7 +225,6 @@
     transition-duration: 0.001ms !important;
   }
   .problem-card:hover,
-  .why-card:hover,
   .who-card:hover,
   .cta-btn:hover {
     transform: none;
@@ -326,58 +298,8 @@
   overflow-x: clip;
   overflow-y: visible;
 }
-.cap-grid {
-  position: relative;
-  isolation: isolate;
-}
 /* blurred colour blobs behind the grid give the glass something to refract */
-.cap-grid::before {
-  content: "";
-  position: absolute;
-  inset: -22% -14%; /* well past the cards: every blob fades out inside the box, nothing is cut off */
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 24% 24% at 26% 26%, rgba(245, 188, 39, 0.42), transparent 100%),
-    radial-gradient(ellipse 22% 22% at 78% 32%, rgba(255, 150, 90, 0.26), transparent 100%),
-    radial-gradient(ellipse 26% 22% at 50% 78%, rgba(245, 188, 39, 0.34), transparent 100%),
-    radial-gradient(ellipse 20% 20% at 34% 58%, rgba(160, 140, 255, 0.16), transparent 100%);
-}
-.cap-tile {
-  color: var(--charcoal);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.28));
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
-  backdrop-filter: blur(18px) saturate(170%);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  box-shadow:
-    0 10px 32px -12px rgba(120, 90, 20, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.25);
-}
-.cap-desc {
-  color: rgba(27, 27, 31, 0.72);
-  font-weight: 400;
-}
-.cap-tile:hover,
-.cap-tile.is-hovered {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.4));
-  box-shadow:
-    0 0 0 1px rgba(245, 188, 39, 0.35),
-    0 18px 40px -14px rgba(180, 130, 10, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-}
 /* hover ring: gold only (was blue / magenta) */
-.cap-tile::before {
-  background: conic-gradient(
-    from var(--cap-spin),
-    transparent 0deg,
-    transparent 150deg,
-    rgba(245, 188, 39, 0.35) 210deg,
-    #f5bc27 270deg,
-    #ffd35c 330deg,
-    transparent 360deg
-  );
-}
 
 /* legal pages (privacy, terms, cookies) */
 .legal-header {
@@ -531,9 +453,105 @@
 
 /* Touch / small screens: a lighter glass blur keeps scrolling at full frame rate. */
 @media (hover: none), (max-width: 767px) {
-  .cap-tile.cap-tile,
   .wf-cell .wf-card {
     -webkit-backdrop-filter: blur(8px) saturate(140%);
     backdrop-filter: blur(8px) saturate(140%);
   }
+}
+
+
+/* =========================================================
+   Brand theme: gold "Au" + purple "GENT" (loads last).
+   Purple = atmosphere (washes, glows, active states). Gold = CTAs and key
+   highlights. Blue is kept only where it aids clarity: the ice-blue text and
+   hairlines on dark sections, the sector icons, the Lottie / plane-stack
+   artwork and secondary links.
+   ========================================================= */
+:root {
+  --purple: #2e013c; /* the logo's "GENT" purple */
+  --purple-mid: #4a0f66; /* glows on dark: the same hue, lifted so it shows */
+  --purple-soft: #7a3fa0;
+  --purple-ink: #1a0524; /* near-black purple for deep backgrounds */
+  --purple-wash: rgba(74, 15, 102, 0.07); /* tint on light sections */
+  --grad-brand: linear-gradient(90deg, var(--purple), var(--gold)); /* purple to gold */
+}
+
+/* ---------- Hero: deep purple falling to near-black ---------- */
+.lp-hero {
+  background:
+    radial-gradient(58% 68% at 78% 44%, rgba(122, 63, 160, 0.24), transparent 70%),
+    radial-gradient(46% 56% at 4% 100%, rgba(74, 15, 102, 0.42), transparent 72%),
+    radial-gradient(34% 38% at 74% 52%, rgba(245, 188, 39, 0.08), transparent 70%),
+    linear-gradient(160deg, var(--purple-ink) 0%, var(--dark) 64%);
+}
+.hb-glow {
+  background: radial-gradient(circle, rgba(122, 63, 160, 0.3), rgba(46, 1, 60, 0.1) 38%, transparent 66%);
+}
+.hb-vignette {
+  background: radial-gradient(ellipse 88% 78% at 55% 50%, transparent 55%, rgba(12, 4, 16, 0.74) 100%);
+}
+
+/* ---------- Dark sections: a soft purple wash ---------- */
+.solutions {
+  background-image:
+    radial-gradient(60% 46% at 88% 0%, rgba(74, 15, 102, 0.38), transparent 72%),
+    radial-gradient(50% 40% at 0% 100%, rgba(46, 1, 60, 0.5), transparent 72%);
+}
+.who {
+  background-image:
+    radial-gradient(60% 40% at 50% 0%, rgba(74, 15, 102, 0.3), transparent 72%),
+    radial-gradient(44% 36% at 100% 100%, rgba(46, 1, 60, 0.45), transparent 72%);
+}
+
+/* ---------- Light sections: very faint purple + warm washes ---------- */
+.structured,
+.problems,
+.why,
+.philosophy,
+#use-cases {
+  background:
+    radial-gradient(56% 38% at 92% 0%, var(--purple-wash), transparent 72%),
+    radial-gradient(46% 34% at 0% 100%, rgba(245, 188, 39, 0.06), transparent 72%),
+    var(--light);
+}
+.problem-card {
+  background-color: #f6f2f9; /* lavender-tinted (was icy blue) */
+}
+
+/* ---------- Active / hover states ---------- */
+/* nav underline: purple into gold */
+.nav-indicator,
+.header.scrolled .nav-indicator,
+.mobile-menu .nav-indicator {
+  background: var(--grad-brand);
+}
+.nav-link:hover,
+.header.scrolled .nav-link:hover {
+  border-bottom-color: var(--purple);
+}
+/* selected industry tab */
+.industry-tab.active {
+  background: linear-gradient(135deg, var(--purple), var(--purple-mid));
+  box-shadow: inset 0 -2px 0 var(--gold), 0 8px 18px -10px rgba(46, 1, 60, 0.7);
+}
+/* selected plane tab */
+.plane-tab.active {
+  background: linear-gradient(135deg, rgba(74, 15, 102, 0.09), rgba(245, 188, 39, 0.1));
+  box-shadow: 0 0 0 1px rgba(74, 15, 102, 0.25), 0 10px 24px -12px rgba(46, 1, 60, 0.35);
+}
+.plane-tab:hover {
+  box-shadow: 0 10px 24px -12px rgba(46, 1, 60, 0.35), 0 0 0 1px rgba(74, 15, 102, 0.18);
+}
+/* countdown bars */
+.pipeline-bar-fill {
+  background: linear-gradient(180deg, var(--purple-soft), var(--gold));
+}
+/* capability card hover: purple glow + a purple-to-gold ring */
+.problem-card:hover,
+.who-card:hover,
+.who-card:focus-visible {
+  box-shadow: 0 0 0 1px rgba(245, 188, 39, 0.6), 0 18px 36px -20px rgba(74, 15, 102, 0.55);
+}
+::selection {
+  background: rgba(122, 63, 160, 0.35);
 }

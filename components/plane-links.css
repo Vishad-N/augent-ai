@@ -13,14 +13,14 @@
   aspect-ratio: 1;
   max-width: 40rem;
   border-radius: 28px;
-  /* Deep charcoal: the artwork is mostly pale (docs, light-blue panels), so it needs a
-     dark ground to reach >= 3:1 non-text contrast. A lifted centre keeps the few
-     dark elements (shield, monitor, hair) from merging into the plate. */
+  /* Logo purple ("GENT" #2E013C) falling to near-black. The artwork is recoloured to lavender
+     tints and lifted purples (see the .lottie files), so it reads clearly on this ground;
+     the lifted centre keeps the darker elements from merging into the plate. */
   background:
-    radial-gradient(circle at 50% 42%, #353740 0%, rgba(53, 55, 64, 0) 62%),
-    linear-gradient(160deg, #1d1e24, #111216);
+    radial-gradient(circle at 50% 42%, rgba(122, 63, 160, 0.42) 0%, rgba(122, 63, 160, 0) 62%),
+    linear-gradient(145deg, #4a0f66 0%, #2e013c 46%, #12041a 100%);
   border: 1px solid rgba(245, 188, 39, 0.3);
-  box-shadow: 0 24px 50px -28px rgba(17, 18, 22, 0.55);
+  box-shadow: 0 24px 50px -28px rgba(46, 1, 60, 0.7);
   transition: border-color 400ms ease, box-shadow 400ms ease;
 }
 
@@ -28,7 +28,7 @@
 .planes-tabs:has(.plane-tab.active) .plane-stage {
   border-color: rgba(245, 188, 39, 0.75);
   box-shadow: 0 0 0 1px rgba(245, 188, 39, 0.25), 0 0 64px -14px rgba(245, 188, 39, 0.55),
-    0 24px 50px -28px rgba(17, 18, 22, 0.55);
+    0 24px 50px -28px rgba(46, 1, 60, 0.7);
 }
 
 .plane-stage-art {
@@ -41,7 +41,7 @@
 
 /* slightly richer colour + a hairline light rim so every shape keeps a readable edge */
 .plane-stage-art {
-  filter: saturate(1.08) drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+  filter: saturate(1.08) drop-shadow(0 0 1px rgba(236, 226, 255, 0.45)) drop-shadow(0 10px 18px rgba(12, 2, 20, 0.55));
 }
 
 .plane-stage-art .lottie {

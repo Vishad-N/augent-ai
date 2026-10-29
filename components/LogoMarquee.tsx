@@ -3,6 +3,13 @@ import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 import SignalLine from "./fx/SignalLine";
 
+// intrinsic sizes (px): lets the browser reserve each logo's box before it loads (no layout shift)
+const SIZES: Record<string, [number, number]> = {
+  "abercrombie.png": [171, 88],
+  "whirlpool.png": [122, 41],
+};
+const sizeOf = (src: string): [number, number] => SIZES[src.split("/").pop() ?? ""] ?? [300, 200];
+
 export default function LogoMarquee() {
   // Two copies back-to-back so the -50% translate loops seamlessly.
   const loop = [...trusted.logos, ...trusted.logos];
@@ -17,7 +24,14 @@ export default function LogoMarquee() {
           <div className="logos-track">
             {loop.map((l, i) => (
               <div className="logo-item" key={`${l.name}-${i}`} aria-hidden={i >= trusted.logos.length}>
-                <img src={l.src} alt={i < trusted.logos.length ? l.name : ""} loading="lazy" />
+                <img
+                  src={l.src}
+                  alt={i < trusted.logos.length ? l.name : ""}
+                  width={sizeOf(l.src)[0]}
+                  height={sizeOf(l.src)[1]}
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             ))}
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
+import { animate, m, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
 import { problemSection, problems } from "@/data/content";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
@@ -151,7 +151,7 @@ export default function ProblemSection() {
               </li>
             );
           })}
-          {!reduce && <motion.span className="rc-pulse" aria-hidden="true" style={{ x, y }} />}
+          {!reduce && <m.span className="rc-pulse" aria-hidden="true" style={{ x, y }} />}
         </ol>
 
         <Reveal className="section-button">

@@ -4,7 +4,7 @@ import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 import CtaButton from "./CtaButton";
 import SignalLine from "./fx/SignalLine";
-import CapabilityCard from "./capabilities/CapabilityCard";
+import MagneticCapabilities from "./capabilities/MagneticCapabilities";
 
 /** Which line icon each capability gets (keyed by its exact title). */
 const ICONS: Record<string, IconKind> = {
@@ -18,8 +18,8 @@ const ICONS: Record<string, IconKind> = {
 };
 
 /**
- * Core Capabilities: section header, then a uniform grid of equal-height cards
- * (3 / 2 / 1 columns). Each card has a line icon; the text is HTML.
+ * Core Capabilities: section header, then magnetic cards (drift + cursor pull on desktop,
+ * tap-to-expand on touch, click to lock and read). 3 / 2 / 1 columns.
  */
 export default function CoreCapabilities() {
   const items = [...additionalCapabilities, ...coreCapabilities];
@@ -35,13 +35,7 @@ export default function CoreCapabilities() {
           />
         </Reveal>
 
-        <div className="cap-grid">
-          {items.map((c, i) => (
-            <Reveal key={c.title} className="cap-cell" delay={(i % 3) * 0.08}>
-              <CapabilityCard title={c.title} description={c.description} icon={ICONS[c.title] ?? "agentic"} />
-            </Reveal>
-          ))}
-        </div>
+        <MagneticCapabilities items={items.map((c) => ({ ...c, icon: ICONS[c.title] ?? "agentic" }))} />
 
         <Reveal className="section-button">
           <CtaButton label="Schedule a Demo" />

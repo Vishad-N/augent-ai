@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
+  // inline the (small) CSS into the HTML: no render-blocking stylesheet requests before first paint
+  experimental: { inlineCss: true },
   async headers() {
     return [
       {

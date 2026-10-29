@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 
 /**
  * Thin gold line that draws across the section when it enters the viewport,
@@ -14,7 +14,7 @@ export default function SignalLine({ onDark = false }: { onDark?: boolean }) {
 
   return (
     <div className={`signal-line ${onDark ? "on-dark" : ""}`} aria-hidden="true">
-      <motion.span
+      <m.span
         className="signal-track"
         initial={reduce ? false : { scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
@@ -22,7 +22,7 @@ export default function SignalLine({ onDark = false }: { onDark?: boolean }) {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         onAnimationComplete={() => setComplete(true)}
       />
-      <motion.span
+      <m.span
         className={`signal-node ${complete ? "complete" : ""}`}
         initial={reduce ? false : { opacity: 0, scale: 0.4, rotate: 45 }}
         animate={complete ? { opacity: 1, scale: 1, rotate: 45 } : undefined}

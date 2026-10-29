@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { AnimatePresence, m, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 import { nav } from "@/data/content";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import CtaButton from "./CtaButton";
@@ -69,7 +69,7 @@ export default function Header() {
         >
           {l.label}
           {isActive && (
-            <motion.span
+            <m.span
               layoutId={layoutId}
               className="nav-indicator"
               aria-hidden="true"
@@ -115,7 +115,7 @@ export default function Header() {
 
       <AnimatePresence>
         {open && (
-          <motion.nav
+          <m.nav
             id="mobile-menu"
             className="mobile-menu"
             aria-label="Mobile"
@@ -126,7 +126,7 @@ export default function Header() {
           >
             {links("nav-indicator-mobile", close)}
             <CtaButton label={nav.cta.label} href={nav.cta.href} onClick={close} />
-          </motion.nav>
+          </m.nav>
         )}
       </AnimatePresence>
     </>

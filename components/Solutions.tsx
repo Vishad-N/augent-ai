@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
-  motion,
+  m,
   useAnimationControls,
   useInView,
   useMotionValue,
@@ -150,18 +150,18 @@ export default function Solutions() {
                     onClick={() => select(i)}
                   >
                     {isActive && (
-                      <motion.span
+                      <m.span
                         layoutId="pipeline-bar"
                         className="pipeline-bar"
                         aria-hidden="true"
                         transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
                       >
-                        <motion.span className="pipeline-bar-fill" style={{ scaleY: reduce ? 1 : progress }} />
-                      </motion.span>
+                        <m.span className="pipeline-bar-fill" style={{ scaleY: reduce ? 1 : progress }} />
+                      </m.span>
                     )}
                     <span className="pipeline-item-title">{s.title}</span>
                     {isActive && !reduce && (
-                      <motion.span className="pill-progress" aria-hidden="true" style={{ scaleX: progress }} />
+                      <m.span className="pill-progress" aria-hidden="true" style={{ scaleX: progress }} />
                     )}
                   </button>
                 );
@@ -179,7 +179,7 @@ export default function Solutions() {
               >
                 <AuMark className="pipeline-watermark" />
                 <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
+                  <m.div
                     key={current.title}
                     className="pipeline-content"
                     initial={{ opacity: 0 }}
@@ -188,7 +188,7 @@ export default function Solutions() {
                     transition={{ duration: 0.25 }}
                   >
                     <PanelContent index={active} />
-                  </motion.div>
+                  </m.div>
                 </AnimatePresence>
               </div>
             ) : (
@@ -259,7 +259,7 @@ function FlipPanel({ active, live }: { active: number; live: boolean }) {
       aria-live={live ? "polite" : "off"}
       tabIndex={0}
     >
-      <motion.div className="pflip-inner" animate={controls} initial={{ rotateY: 0 }}>
+      <m.div className="pflip-inner" animate={controls} initial={{ rotateY: 0 }}>
         {[0, 1].map((side) => {
           const visible = (side === 0) === front;
           return (
@@ -277,7 +277,7 @@ function FlipPanel({ active, live }: { active: number; live: boolean }) {
             </div>
           );
         })}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

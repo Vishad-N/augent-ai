@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 
 type Signal = {
   /** index into `paths` the dot travels along */
@@ -77,7 +77,7 @@ export default function CircuitTrace({ variant, active }: { variant: number; act
       </g>
       <g className="trace-live">
         {paths.map((d, i) => (
-          <motion.path
+          <m.path
             key={d}
             d={d}
             initial={false}

@@ -1,0 +1,190 @@
+/* Core Capabilities: magnetic cards (components/capabilities/MagneticCapabilities.tsx) */
+.mag-grid {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem 1.75rem;
+  align-items: start; /* an expanded card grows alone; its neighbours keep their height */
+  padding: 1rem 0 0.5rem;
+}
+
+/* soft colour behind the cards; sits in an oversized box so it fades out unclipped */
+.mag-grid::before {
+  content: "";
+  position: absolute;
+  inset: -22% -14%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 24% 24% at 26% 26%, rgba(245, 188, 39, 0.3), transparent 100%),
+    radial-gradient(ellipse 22% 22% at 78% 32%, rgba(122, 63, 160, 0.16), transparent 100%),
+    radial-gradient(ellipse 26% 22% at 50% 78%, rgba(245, 188, 39, 0.24), transparent 100%),
+    radial-gradient(ellipse 20% 20% at 34% 58%, rgba(74, 15, 102, 0.12), transparent 100%);
+}
+
+/* gentle scatter: columns sit at slightly different heights, still clearly a grid */
+.mag-cell:nth-child(3n + 2) {
+  margin-top: 2.25rem;
+}
+.mag-cell:nth-child(3n + 3) {
+  margin-top: 0.75rem;
+}
+.mag-cell:last-child:nth-child(3n + 1) {
+  grid-column: 2;
+}
+
+.mag-card {
+  position: relative;
+  padding: 1.9rem 1.9rem 2rem;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid rgba(46, 1, 60, 0.1);
+  box-shadow: 0 1px 2px rgba(31, 24, 40, 0.04), 0 14px 32px -20px rgba(46, 1, 60, 0.28);
+  color: var(--charcoal, #1b1b1f);
+  transition: border-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+.mag-card.is-live {
+  will-change: transform;
+}
+.mag-card:hover {
+  border-color: rgba(245, 188, 39, 0.55);
+}
+.mag-card:hover .cap-icon .g,
+.mag-card.is-locked .cap-icon .g {
+  stroke: #ffd35c;
+  filter: drop-shadow(0 0 3px rgba(245, 188, 39, 0.85));
+}
+
+/* locked: a thin gold edge with a soft purple glow */
+.mag-card.is-locked {
+  border-color: rgba(245, 188, 39, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(245, 188, 39, 0.55),
+    0 0 26px rgba(245, 188, 39, 0.16),
+    0 22px 48px -18px rgba(74, 15, 102, 0.4);
+}
+
+.mag-title {
+  margin: 0.35rem 0 0;
+  font-size: 1.3rem;
+  font-weight: 550;
+  line-height: 1.25;
+  padding-right: 2.25rem;
+}
+/* the title button covers the whole card, so the card is one big tap target */
+.mag-toggle {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.mag-toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.mag-toggle:focus-visible {
+  outline: none;
+}
+.mag-toggle:focus-visible::after {
+  outline: 2px solid #7a3fa0;
+  outline-offset: 3px;
+}
+
+/* + that turns into x when locked */
+.mag-plus {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 188, 39, 0.8);
+  pointer-events: none;
+  transition: transform 0.35s var(--ease-out), background 0.3s var(--ease-out);
+}
+.mag-plus::before,
+.mag-plus::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 10px;
+  height: 1.5px;
+  background: #2e013c;
+  border-radius: 1px;
+}
+.mag-plus::after {
+  transform: rotate(90deg);
+}
+.mag-card.is-locked .mag-plus {
+  transform: rotate(45deg);
+  background: rgba(245, 188, 39, 0.18);
+}
+
+/* description reveal: the grid-row trick animates to the content's own height */
+.mag-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.38s var(--ease-out), visibility 0s linear 0.38s;
+}
+.mag-more > div {
+  min-height: 0;
+  overflow: hidden;
+}
+.mag-card.is-locked .mag-more {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.38s var(--ease-out), visibility 0s;
+}
+.mag-desc {
+  margin: 0;
+  padding-top: 0.9rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(27, 27, 31, 0.85);
+}
+
+@media (max-width: 991px) {
+  .mag-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .mag-cell:nth-child(n) {
+    margin-top: 0;
+  }
+  .mag-cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.625rem);
+  }
+}
+@media (max-width: 767px) {
+  .mag-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .mag-cell:last-child:nth-child(odd) {
+    grid-column: auto;
+    width: auto;
+  }
+  .mag-card {
+    padding: 1.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mag-card,
+  .mag-more,
+  .mag-plus {
+    transition: none;
+  }
+}

@@ -570,10 +570,6 @@
   }
 }
 
-.flip-card {
-  border-radius: 1rem;
-}
-
 /* architecture hosts the second particle field */
 .architecture {
   position: relative;
@@ -610,9 +606,6 @@
 /* ---------- Touch: hover equivalents (tap toggles, long-press holds) ---------- */
 @media (hover: none) {
   .problem-card,
-  .cap-card,
-  .why-card,
-  .flip-card,
   .plane-tab {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -624,27 +617,11 @@
     translate: 0 -5%;
     box-shadow: 0 24px 40px -24px rgba(26, 29, 33, 0.45);
   }
-  .problem-card.touch-hover .risk-bg,
-  .problem-card:active .risk-bg {
-    transform: translateY(0) scale(1.05);
-  }
   .problem-card.touch-hover h3,
   .problem-card.touch-hover p,
   .problem-card:active h3,
   .problem-card:active p {
     color: var(--augent-white);
-  }
-
-  .cap-card.touch-hover,
-  .cap-card:active {
-    translate: 0 -6px;
-    box-shadow: 0 24px 40px -20px rgba(52, 60, 72, 0.55);
-  }
-
-  .why-card.touch-hover,
-  .why-card:active {
-    color: var(--augent-brand-purple);
-    scale: 1.02;
   }
 
   .plane-tab:active {
@@ -663,10 +640,6 @@
     min-height: 48px;
     padding: 12px 18px;
   }
-  .footer-social a {
-    min-width: 48px;
-    min-height: 48px;
-  }
   .footer-legal a {
     display: inline-flex;
     align-items: center;
@@ -684,7 +657,6 @@
     display: inline-block;
     padding: 0.4rem 0;
   }
-  .solution-left .cta-btn,
   .cta-btn {
     min-height: 48px;
   }
@@ -868,13 +840,6 @@
    Hero copy + buttons: mouse response
    ========================================================= */
 /* headline: white text with a cursor-following gold light clipped to the glyphs */
-.hero-spot {
-  background-image: linear-gradient(#fff, #fff); /* pre-hydration / touch fallback */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
 
 .lp-copy {
   will-change: transform;
@@ -1196,47 +1161,10 @@
    Core Capabilities: header + uniform card grid
    (components/CoreCapabilities.tsx, components/capabilities/*)
    ========================================================= */
-.cap-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-}
-
-.cap-cell {
-  display: flex; /* lets every card stretch to the row's height */
-}
 
 /* a lone last card sits in the middle column instead of hanging left */
-.cap-cell:last-child:nth-child(3n + 1) {
-  grid-column: 2;
-}
-
-.cap-tile {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.9rem;
-  padding: 1.75rem 1.75rem 2rem;
-  color: var(--augent-white);
-  background: linear-gradient(160deg, #23272D 0%, var(--augent-purple-70) 55%, var(--augent-purple-dark) 100%);
-  border: 1px solid rgba(207, 232, 250, 0.14);
-  border-radius: 16px;
-  transition: translate 0.3s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
-  -webkit-tap-highlight-color: transparent;
-}
 
 /* hover: lift + a soft glowing gold outline (crisp ring, faint halo, depth shadow) */
-.cap-tile:hover,
-.cap-tile.is-hovered {
-  translate: 0 -4px;
-  border-color: rgba(245, 188, 39, 0.75);
-  box-shadow:
-    0 0 0 1px rgba(245, 188, 39, 0.35),
-    0 0 18px 2px rgba(245, 188, 39, 0.22),
-    0 0 42px 6px rgba(245, 188, 39, 0.08),
-    0 22px 40px -26px rgba(52, 60, 72, 0.85);
-}
 
 /* icon: purple line art, thin gold accents that light up on hover (no backdrop) */
 .cap-icon {
@@ -1257,65 +1185,14 @@
   stroke-width: 1.4;
   transition: stroke 0.3s var(--ease-out), filter 0.3s var(--ease-out);
 }
-.cap-tile:hover .cap-icon .g,
-.cap-tile.is-hovered .cap-icon .g {
-  stroke: #ffd35c;
-  filter: drop-shadow(0 0 3px rgba(245, 188, 39, 0.85));
-}
-
-.cap-title {
-  font-size: 1.3rem;
-  font-weight: 500;
-  line-height: 1.25;
-}
-
-.cap-desc {
-  font-size: 0.97rem;
-  font-weight: 300;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.68);
-}
 
 .capabilities .section-button {
   margin-top: 2.5rem;
 }
 
 /* tablet: 2 columns, a lone last card is centred */
-@media (max-width: 991px) {
-  .cap-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .cap-cell:last-child:nth-child(3n + 1) {
-    grid-column: auto;
-  }
-  .cap-cell:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: calc(50% - 0.625rem);
-  }
-}
 
 /* mobile: 1 column */
-@media (max-width: 767px) {
-  .cap-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1rem;
-  }
-  .cap-cell:last-child:nth-child(odd) {
-    grid-column: auto;
-    width: auto;
-  }
-  .cap-tile {
-    padding: 1.5rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cap-tile:hover,
-  .cap-tile.is-hovered {
-    translate: none;
-  }
-}
 
 /* ---------- Solutions panel: two-sided flip card ---------- */
 /* the panel becomes the 3D stage; the faces carry the card styling */
@@ -1672,9 +1549,7 @@
 .solutions,
 .architecture,
 .cta-card,
-.footer,
-.cap-tile,
-.flip-front {
+.footer {
   --surface: var(--navy);
   --text: var(--ice);
   --text-muted: rgba(232, 244, 255, 0.75);
@@ -1750,11 +1625,6 @@
   color: var(--navy);
 }
 
-.why-card:hover,
-.why-card.touch-hover {
-  color: var(--eblue-strong);
-}
-
 .sector-label {
   color: var(--navy);
   opacity: 0.6;
@@ -1777,14 +1647,6 @@
 .industry-tab:hover {
   background-color: var(--navy-700);
   color: var(--ice);
-}
-
-.flip-back {
-  background-color: var(--ice);
-}
-
-.flip-back .back-text {
-  color: var(--navy);
 }
 
 .pink-blur {
@@ -2096,10 +1958,6 @@
   filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.85));
 }
 
-.footer .footer-top {
-  margin-top: 1rem;
-}
-
 /* =========================================================
    Footer bottom row: copyright | layered social icons | legal
    (components/fx/LayeredSocials.tsx, layered-stack hover adapted
@@ -2245,72 +2103,9 @@
    conic gradient spins instead and is masked down to a thin border, so the
    light runs evenly around the whole edge. Electric Blue to magenta.
    ========================================================= */
-@property --cap-spin {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.cap-tile {
-  position: relative;
-  isolation: isolate;
-}
-
-.cap-tile::before {
-  content: "";
-  position: absolute;
-  inset: -1px; /* sit over the existing 1px border */
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  background: conic-gradient(
-    from var(--cap-spin),
-    transparent 0deg,
-    transparent 150deg,
-    rgba(0, 183, 255, 0.9) 220deg,
-    #F5BC27 270deg,
-    #ff30ff 330deg,
-    transparent 360deg
-  );
-  transition: opacity 0.35s var(--ease-out);
-  animation: cap-spin 3s linear infinite paused;
-}
 
 /* crisp 2px ring */
-.cap-tile::before {
-  z-index: 2;
-  padding: 2px;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-}
 
-@keyframes cap-spin {
-  to {
-    --cap-spin: 360deg;
-  }
-}
-
-.cap-tile:hover,
-.cap-tile.is-hovered {
-  border-color: transparent;
-  box-shadow:
-    0 0 22px 2px rgba(245, 188, 39, 0.14),
-    0 22px 40px -26px rgba(52, 60, 72, 0.85);
-}
-
-.cap-tile:hover::before,
-.cap-tile.is-hovered::before {
-  opacity: 1;
-  animation-play-state: running;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cap-tile::before {
-    animation: none;
-    --cap-spin: 200deg; /* a still, lit edge instead of a spinning one */
-  }
-}
 
 /* =========================================================
    Use Cases: sector icon in rippling glass discs
@@ -2513,6 +2308,25 @@
   color: transparent;
   -webkit-text-fill-color: transparent;
   will-change: transform;
+}
+
+/* headline entrance: each line rises through its mask. Pure CSS (no JS needed to start). */
+.ht-line[data-rise] {
+  animation: ht-rise 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.15s + var(--i, 0) * 0.16s);
+}
+@keyframes ht-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ht-line[data-rise] {
+    animation: none;
+  }
 }
 
 /* header "Au" mark: one soft gold pulse when the headline lands */

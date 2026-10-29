@@ -14,7 +14,7 @@ export default function Philosophy() {
         </Reveal>
 
         <Reveal>
-          <img src={philosophySection.logo} alt="AuGENT: Guided, Evolution, Neural, Transformation" className="philosophy-logo" />
+          <img src={philosophySection.logo} alt="AuGENT: Guided, Evolution, Neural, Transformation" className="philosophy-logo" width={831} height={179} loading="lazy" decoding="async" />
         </Reveal>
 
         <Reveal className="philosophy-grid">

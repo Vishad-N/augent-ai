@@ -6,6 +6,7 @@ import "./globals.css";
 import "./living.css";
 import "./theme.css";
 import AckLayer from "@/components/fx/AckLayer";
+import MotionProvider from "@/components/MotionProvider";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
@@ -65,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd).replace(/</g, "\\u003c") }}
         />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <AckLayer />
       </body>
     </html>

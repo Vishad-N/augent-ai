@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ctaFields, ctaPoints, ctaSection } from "@/data/content";
 import Reveal from "./Reveal";
 import SignalLine from "./fx/SignalLine";
@@ -55,7 +55,7 @@ export default function CTAForm() {
   return (
     <section id="cta" className="cta-section padding-global">
       <div className="container cta-stage">
-        <motion.div
+        <m.div
           ref={cardRef}
           className="cta-card"
           style={reduce ? undefined : { rotateX, scale, y, opacity, transformOrigin: "50% 100%" }}
@@ -76,7 +76,7 @@ export default function CTAForm() {
           <Reveal delay={0.1} className="form-block" y={24}>
             <AnimatePresence mode="wait">
               {status === "sent" ? (
-                <motion.div
+                <m.div
                   key="sent"
                   className="form-success"
                   initial={{ opacity: 0, y: 12 }}
@@ -90,9 +90,9 @@ export default function CTAForm() {
                       Send another
                     </button>
                   </div>
-                </motion.div>
+                </m.div>
               ) : (
-                <motion.form key="form" className="cta-form" onSubmit={submit} noValidate exit={{ opacity: 0 }}>
+                <m.form key="form" className="cta-form" onSubmit={submit} noValidate exit={{ opacity: 0 }}>
                   <div className="form-col">
                     {ctaFields.left.map((f) => (
                       <input
@@ -149,11 +149,11 @@ export default function CTAForm() {
                     </button>
                     {error && <p className="form-message error" role="alert">{error}</p>}
                   </div>
-                </motion.form>
+                </m.form>
               )}
             </AnimatePresence>
           </Reveal>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

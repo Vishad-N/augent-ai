@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useCases, useCasesSection } from "@/data/content";
 import { Title } from "./SectionHeading";
 import Reveal from "./Reveal";
@@ -44,7 +44,7 @@ export default function UseCases() {
           {/* stays mounted: the icon cross-fades and the rings pulse on every switch */}
           <SectorRipple icon={uc.icon} />
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+            <m.div
               key={uc.industry}
               className="sector-content"
               initial={{ opacity: 0, y: 12 }}
@@ -62,7 +62,7 @@ export default function UseCases() {
                 <p className="sector-text">{uc.documentTypes}</p>
               </div>
               <p className="sector-text">{uc.description}</p>
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
       </div>

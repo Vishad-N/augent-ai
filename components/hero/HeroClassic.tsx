@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { hero } from "@/data/content";
 import CtaButton from "../CtaButton";
 
@@ -19,16 +19,16 @@ export default function HeroClassic() {
 
       <div className="container">
         <div className="hero-content">
-          <motion.h1 className="hero-title" {...item(0.1)}>
+          <m.h1 className="hero-title" {...item(0.1)}>
             {hero.title}
-          </motion.h1>
-          <motion.p className="hero-subtitle" {...item(0.25)}>
+          </m.h1>
+          <m.p className="hero-subtitle" {...item(0.25)}>
             {hero.subtitle}
-          </motion.p>
-          <motion.div className="hero-buttons" {...item(0.4)}>
+          </m.p>
+          <m.div className="hero-buttons" {...item(0.4)}>
             <CtaButton label={hero.primaryCta.label} href={hero.primaryCta.href} />
             <CtaButton label={hero.secondaryCta.label} href={hero.secondaryCta.href} variant="alternate" noArrow />
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

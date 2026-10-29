@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, MotionValue, useTransform } from "framer-motion";
+import { m, MotionValue, useTransform } from "framer-motion";
 import { usePointerParallax } from "@/hooks/usePointerParallax";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import Particles from "../fx/Particles";
 import SignalField from "./SignalField";
 
@@ -28,6 +29,8 @@ type Props = {
 export default function HeroBackground({ signalField = true, constellation = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const { x, y } = usePointerParallax(ref);
+  // phones / touch: no cursor to react to, so the interactive canvas field is skipped entirely
+  const lite = useMediaQuery("(max-width: 767px), (pointer: coarse)");
 
   return (
     <div ref={ref} className="hero-bg" aria-hidden="true">
@@ -53,7 +56,7 @@ export default function HeroBackground({ signalField = true, constellation = fal
       </Layer>
 
       {/* not inside a parallax layer: its cursor maths needs untransformed coordinates */}
-      {signalField && <SignalField />}
+      {signalField && !lite && <SignalField />}
 
       <div className="hb-vignette" />
     </div>
@@ -82,9 +85,9 @@ function Layer({
   const rotateY = useTransform(x, (v) => v * tilt);
   const rotateX = useTransform(y, (v) => -v * tilt);
   return (
-    <motion.div className={`hb-layer ${className}`} style={{ x: tx, y: ty, rotateX, rotateY }}>
+    <m.div className={`hb-layer ${className}`} style={{ x: tx, y: ty, rotateX, rotateY }}>
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
