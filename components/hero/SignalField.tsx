@@ -69,7 +69,7 @@ export default function SignalField({ className = "" }: { className?: string }) 
       const r = canvas.getBoundingClientRect();
       W = r.width;
       H = r.height;
-      dpr = Math.min(2, window.devicePixelRatio || 1);
+      dpr = Math.min(1.5, window.devicePixelRatio || 1);
       canvas.width = Math.max(1, Math.round(W * dpr));
       canvas.height = Math.max(1, Math.round(H * dpr));
       if (!running) draw(lastT);

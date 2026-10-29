@@ -1,12 +1,12 @@
 import { additionalCapabilities, coreCapabilities, coreCapabilitiesHeading } from "@/data/content";
-import type { IconKind } from "@/lib/iconStage";
+import type { IconKind } from "./capabilities/CapabilityIcon";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 import CtaButton from "./CtaButton";
 import SignalLine from "./fx/SignalLine";
 import CapabilityCard from "./capabilities/CapabilityCard";
 
-/** Which 3D icon each capability gets (keyed by its exact title). */
+/** Which line icon each capability gets (keyed by its exact title). */
 const ICONS: Record<string, IconKind> = {
   "Agentic Workflow Engine": "agentic",
   "Multi-Tenant Architecture": "tenant",
@@ -19,7 +19,7 @@ const ICONS: Record<string, IconKind> = {
 
 /**
  * Core Capabilities: section header, then a uniform grid of equal-height cards
- * (3 / 2 / 1 columns). Each card owns a small Three.js icon; the text is HTML.
+ * (3 / 2 / 1 columns). Each card has a line icon; the text is HTML.
  */
 export default function CoreCapabilities() {
   const items = [...additionalCapabilities, ...coreCapabilities];

@@ -655,7 +655,7 @@ export default function HaloSpray({
     const resize = () => {
       W = root.offsetWidth;
       H = root.offsetHeight;
-      dpr = Math.min(2, window.devicePixelRatio || 1);
+      dpr = Math.min(1.5, window.devicePixelRatio || 1);
       canvas.width = Math.max(1, Math.round(W * dpr));
       canvas.height = Math.max(1, Math.round(H * dpr));
       // publish the ring's on-screen centre + diameter so children can sit inside it

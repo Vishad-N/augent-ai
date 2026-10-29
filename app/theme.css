@@ -232,7 +232,7 @@
   textarea {
     min-height: 48px;
   }
-  .cap-tile,
+  .cap-tile.cap-tile,
   .problem-card,
   .why-card {
     padding: var(--s3);
@@ -322,7 +322,9 @@
    ========================================================= */
 .capabilities {
   position: relative;
-  overflow: hidden;
+  /* the glow may bleed past the section top/bottom; only the page sides are clipped (no h-scroll) */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 .cap-grid {
   position: relative;
@@ -332,15 +334,14 @@
 .cap-grid::before {
   content: "";
   position: absolute;
-  inset: -8% -4%;
+  inset: -22% -14%; /* well past the cards: every blob fades out inside the box, nothing is cut off */
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(34% 30% at 12% 18%, rgba(245, 188, 39, 0.42), transparent 70%),
-    radial-gradient(30% 28% at 88% 30%, rgba(255, 150, 90, 0.26), transparent 70%),
-    radial-gradient(36% 30% at 50% 86%, rgba(245, 188, 39, 0.34), transparent 70%),
-    radial-gradient(26% 24% at 30% 60%, rgba(160, 140, 255, 0.16), transparent 70%);
-  filter: blur(28px);
+    radial-gradient(ellipse 24% 24% at 26% 26%, rgba(245, 188, 39, 0.42), transparent 100%),
+    radial-gradient(ellipse 22% 22% at 78% 32%, rgba(255, 150, 90, 0.26), transparent 100%),
+    radial-gradient(ellipse 26% 22% at 50% 78%, rgba(245, 188, 39, 0.34), transparent 100%),
+    radial-gradient(ellipse 20% 20% at 34% 58%, rgba(160, 140, 255, 0.16), transparent 100%);
 }
 .cap-tile {
   color: var(--charcoal);
@@ -356,9 +357,6 @@
 .cap-desc {
   color: rgba(27, 27, 31, 0.72);
   font-weight: 400;
-}
-.cap-icon {
-  background: radial-gradient(circle at 50% 50%, rgba(245, 188, 39, 0.22), transparent 70%);
 }
 .cap-tile:hover,
 .cap-tile.is-hovered {
@@ -529,4 +527,13 @@
 .legal-section[id],
 .legal-section h2[id] {
   scroll-margin-top: 24px;
+}
+
+/* Touch / small screens: a lighter glass blur keeps scrolling at full frame rate. */
+@media (hover: none), (max-width: 767px) {
+  .cap-tile.cap-tile,
+  .wf-cell .wf-card {
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    backdrop-filter: blur(8px) saturate(140%);
+  }
 }

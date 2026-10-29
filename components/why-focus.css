@@ -12,7 +12,6 @@
   position: absolute;
   z-index: -1;
   border-radius: 50%;
-  filter: blur(48px);
   pointer-events: none;
 }
 .wf-orb-a {

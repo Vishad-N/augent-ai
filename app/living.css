@@ -181,7 +181,6 @@
   margin-left: -180px;
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
-  filter: blur(6px);
   pointer-events: none;
 }
 
@@ -1239,26 +1238,29 @@
     0 22px 40px -26px rgba(52, 60, 72, 0.85);
 }
 
-/* icon well: 72px canvas on a faint gold glow */
+/* icon: purple line art, thin gold accents that light up on hover (no backdrop) */
 .cap-icon {
   display: block;
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
   margin-bottom: 0.35rem;
-  border-radius: 14px;
-  background: radial-gradient(circle at 50% 50%, rgba(245, 188, 39, 0.09), transparent 70%);
-  transition: background 0.3s var(--ease-out);
+  color: #2e013c; /* the logo's "GENT" purple */
 }
-
-.cap-tile:hover .cap-icon,
-.cap-tile.is-hovered .cap-icon {
-  background: radial-gradient(circle at 50% 50%, rgba(245, 188, 39, 0.2), transparent 70%);
-}
-
-.cap-icon canvas {
+.cap-icon svg {
   display: block;
-  width: 72px;
-  height: 72px;
+  overflow: visible;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.cap-icon .g {
+  stroke: #f5bc27;
+  stroke-width: 1.4;
+  transition: stroke 0.3s var(--ease-out), filter 0.3s var(--ease-out);
+}
+.cap-tile:hover .cap-icon .g,
+.cap-tile.is-hovered .cap-icon .g {
+  stroke: #ffd35c;
+  filter: drop-shadow(0 0 3px rgba(245, 188, 39, 0.85));
 }
 
 .cap-title {
@@ -2330,9 +2332,8 @@
   border-radius: 50%;
   background: linear-gradient(0deg, rgba(201, 150, 12, 0.1) 0%, rgba(245, 188, 39, 0.04) 100%);
   border-top: 1px solid rgba(201, 150, 12, 0.9);
-  box-shadow: rgba(18, 20, 23, 0.14) 0 10px 10px 0;
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  box-shadow: rgba(18, 20, 23, 0.14) 0 18px 16px 0;
+  will-change: transform;
   animation: sr-ripple var(--sr-duration) infinite ease-in-out paused;
 }
 
@@ -2384,15 +2385,71 @@
   animation-play-state: running;
 }
 
+/* industry switch: old icon fades out, new one in; outer rings spin once and a gold ring pulses */
+.sr-icon-out {
+  z-index: 1;
+  animation: sr-glow var(--sr-duration) infinite ease-in-out paused, sr-fade-out 0.38s ease both;
+}
+.sr-icon-in {
+  animation: sr-glow var(--sr-duration) infinite ease-in-out paused, sr-fade-in 0.38s ease both;
+}
+.sector-ripple.is-live .sr-icon-out,
+.sector-ripple.is-live .sr-icon-in {
+  animation-play-state: running, running;
+}
+.sector-ripple.is-pulse .sr-box:not(:first-child) {
+  animation: sr-ripple var(--sr-duration) infinite ease-in-out running,
+    sr-spin 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1 both;
+}
+.sector-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(245, 188, 39, 0.85);
+  opacity: 0;
+  pointer-events: none;
+}
+.sector-ripple.is-pulse::after {
+  animation: sr-ping 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1;
+}
+
+@keyframes sr-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sr-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes sr-spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes sr-ping {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.55);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
 @keyframes sr-ripple {
   0%,
   100% {
     transform: scale(1);
-    box-shadow: rgba(18, 20, 23, 0.14) 0 10px 10px 0;
   }
   50% {
     transform: scale(1.18);
-    box-shadow: rgba(18, 20, 23, 0.14) 0 30px 20px 0;
   }
 }
 
@@ -2416,8 +2473,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sr-box,
-  .sr-icon {
-    animation: none;
+  .sr-icon,
+  .sector-ripple::after {
+    animation: none !important;
   }
 }
 

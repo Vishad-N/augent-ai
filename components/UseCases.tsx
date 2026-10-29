@@ -40,29 +40,28 @@ export default function UseCases() {
           </div>
         </Reveal>
 
-        <div id="usecase-panel" role="tabpanel" aria-label={uc.industry}>
-          <AnimatePresence mode="wait">
+        <div id="usecase-panel" role="tabpanel" aria-label={uc.industry} className="usecase-panel">
+          {/* stays mounted: the icon cross-fades and the rings pulse on every switch */}
+          <SectorRipple icon={uc.icon} />
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={uc.industry}
-              className="usecase-panel"
-              initial={{ opacity: 0, y: 16 }}
+              className="sector-content"
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
-              <SectorRipple icon={uc.icon} />
-              <div className="sector-content">
-                <h3 className="sector-heading">{uc.industry}</h3>
-                <div>
-                  <span className="sector-label">Business Outcomes</span>
-                  <p className="sector-text">{uc.outcomes}</p>
-                </div>
-                <div>
-                  <span className="sector-label">Document Type</span>
-                  <p className="sector-text">{uc.documentTypes}</p>
-                </div>
-                <p className="sector-text">{uc.description}</p>
+              <h3 className="sector-heading">{uc.industry}</h3>
+              <div>
+                <span className="sector-label">Business Outcomes</span>
+                <p className="sector-text">{uc.outcomes}</p>
               </div>
+              <div>
+                <span className="sector-label">Document Type</span>
+                <p className="sector-text">{uc.documentTypes}</p>
+              </div>
+              <p className="sector-text">{uc.description}</p>
             </motion.div>
           </AnimatePresence>
         </div>
