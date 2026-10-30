@@ -9,3 +9,29 @@ next-env.d.ts
 # playwright
 /test-results/
 /playwright-report/
+Connect the CTA / “Schedule a Demo” form on this page only to Formspree (or Getform) so submissions are stored and emailed. Do not change any other forms or pages.
+
+## Behavior
+- On submit, send the form data (name, email, phone, and any other existing fields) to a Formspree (or Getform) endpoint.
+- Show a clear success message after a successful submit.
+- Show a simple error message if the request fails.
+- Keep client-side validation for required fields (name, email).
+- Disable the submit button while the request is in progress.
+
+## Setup notes
+- Use an environment variable for the Formspree/Getform endpoint (e.g. NEXT_PUBLIC_FORMSPREE_ENDPOINT or similar).
+- Do not hardcode the form ID in a way that can’t be changed easily.
+- Formspree/Getform will handle storing the lead and sending the email notification — no extra email service needed in this task.
+
+## Constraints
+- Only wire up the existing CTA form on this page.
+- Do not alter layout, styling, or other sections.
+- Keep the current field names and labels.
+- Works with the existing React/Next.js form component.
+
+## Deliverables
+- Updated form submit handler that POSTs to the Formspree/Getform endpoint.
+- Success and error states in the UI.
+- Short comment or README note on which env variable to set.
+
+Implement lead capture for this page’s CTA form only via Formspree or Getform.

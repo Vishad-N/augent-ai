@@ -8,10 +8,14 @@ import SignalLine from "./fx/SignalLine";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
+// Full Formspree (or Getform) endpoint URL, e.g. https://formspree.io/f/xxxxxxxx.
+// Set NEXT_PUBLIC_FORMSPREE_ENDPOINT in .env.local (see .env.example).
+const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
+
 /**
- * Demo request form. The live site posts to Webflow forms; this clone has no
- * backend, so submission is validated client-side and then shows a success
- * state. Swap `submit` for a real endpoint (Formspree, an API route, etc.).
+ * Demo request form. Submissions are validated client-side, then POSTed as
+ * JSON to the endpoint in NEXT_PUBLIC_FORMSPREE_ENDPOINT, which stores the lead
+ * and sends the email notification.
  */
 export default function CTAForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -41,9 +45,13 @@ export default function CTAForm() {
     setStatus("sending");
     const data = Object.fromEntries(new FormData(form).entries());
     try {
-      // Placeholder for a real submission endpoint.
-      await new Promise((r) => setTimeout(r, 600));
-      console.info("Demo request", data);
+      if (!FORM_ENDPOINT) throw new Error("NEXT_PUBLIC_FORMSPREE_ENDPOINT is not set");
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error(`Form submission failed (${res.status})`);
       setStatus("sent");
       form.reset();
     } catch {
