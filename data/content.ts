@@ -114,6 +114,7 @@ export const solutions = [
     subtitle: "IDP / IDGP — End-to-End Document Automation",
     description:
       "Handles high-volume, complex documents with goal-driven AI agents that ingest, classify, extract, validate, and deliver structured, audit-ready data without templates or manual effort. Integrates directly into ERP, CRM, and compliance systems.",
+    href: "/intelligent-document-processing",
     lottie: `${A}/lottie/idp.lottie`,
     lottieMobile: `${A}/lottie/idp-mobile.lottie`,
   },

@@ -8,12 +8,12 @@ import Reveal from "./Reveal";
 import SignalLine from "./fx/SignalLine";
 import SectorRipple from "./fx/SectorRipple";
 
-export default function UseCases() {
+export default function UseCases({ id = "use-cases" }: { id?: string } = {}) {
   const [active, setActive] = useState(0);
   const uc = useCases[active];
 
   return (
-    <section id="use-cases" className="padding-global section-medium">
+    <section id={id} className="padding-global section-medium">
       <div className="container">
         <SignalLine />
         <Reveal className="usecases-heading">

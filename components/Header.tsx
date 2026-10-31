@@ -7,13 +7,20 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import CtaButton from "./CtaButton";
 import { AU_PULSE_EVENT } from "@/lib/heroFx";
 
-const SECTION_IDS = nav.links.map((l) => l.href.slice(1));
+type HeaderProps = {
+  links?: { label: string; href: string }[];
+  cta?: { label: string; href: string };
+  /** Where the logo goes: "#hero" on the home page, "/" on sub-pages. */
+  logoHref?: string;
+  /** Always render the light header (for pages that open on a light hero). */
+  solid?: boolean;
+};
 
-export default function Header() {
+export default function Header({ links: navLinks = nav.links, cta = nav.cta, logoHref = "#hero", solid = false }: HeaderProps = {}) {
   const reduce = useReducedMotion();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const active = useActiveSection(SECTION_IDS);
+  const active = useActiveSection(navLinks.map((l) => l.href.slice(1)));
 
   // Motion's scroll value instead of a window scroll listener; only flips state
   // when the 40px threshold is actually crossed.
@@ -57,7 +64,7 @@ export default function Header() {
   const close = () => setOpen(false);
 
   const links = (layoutId: string, onClick?: () => void) =>
-    nav.links.map((l) => {
+    navLinks.map((l) => {
       const isActive = active === l.href.slice(1);
       return (
         <a
@@ -82,9 +89,9 @@ export default function Header() {
 
   return (
     <>
-      <header className={`header padding-global ${scrolled ? "scrolled" : ""} ${open ? "menu-open" : ""}`}>
+      <header className={`header padding-global ${scrolled || solid ? "scrolled" : ""} ${open ? "menu-open" : ""}`}>
         <div className="header-inner">
-          <a href="#hero" className={`header-logo${auPulse ? " au-pulsing" : ""}`} aria-label="AuGENT home" onClick={close}>
+          <a href={logoHref} className={`header-logo${auPulse ? " au-pulsing" : ""}`} aria-label="AuGENT home" onClick={close}>
             <img src={nav.logoWhite} alt="AuGENT" className="logo-white" />
             <img src={nav.logoDark} alt="" aria-hidden="true" className="logo-dark" />
             <span className="au-pulse" aria-hidden="true" />
@@ -95,7 +102,7 @@ export default function Header() {
           </nav>
 
           <div className="header-cta">
-            <CtaButton label={nav.cta.label} href={nav.cta.href} />
+            <CtaButton label={cta.label} href={cta.href} />
           </div>
 
           <button
@@ -125,7 +132,7 @@ export default function Header() {
             transition={{ duration: 0.25 }}
           >
             {links("nav-indicator-mobile", close)}
-            <CtaButton label={nav.cta.label} href={nav.cta.href} onClick={close} />
+            <CtaButton label={cta.label} href={cta.href} onClick={close} />
           </m.nav>
         )}
       </AnimatePresence>

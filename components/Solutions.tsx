@@ -202,11 +202,18 @@ export default function Solutions() {
 }
 
 function PanelContent({ index }: { index: number }) {
-  const s = solutions[index];
+  const s = solutions[index] as (typeof solutions)[number] & { href?: string };
   return (
     <>
       <h3 className="pipeline-subtitle">{s.subtitle}</h3>
       <p className="pipeline-description">{s.description}</p>
+      {s.href && (
+        <p className="pipeline-description">
+          <a href={s.href} className="pipeline-link">
+            Learn more
+          </a>
+        </p>
+      )}
     </>
   );
 }

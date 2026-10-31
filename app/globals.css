@@ -1520,3 +1520,9 @@ textarea.text-field {
     transition-duration: 0.01ms !important;
   }
 }
+
+.pipeline-link {
+  color: var(--augent-brand-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

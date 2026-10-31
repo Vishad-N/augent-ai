@@ -25,6 +25,7 @@ Connect the CTA / “Schedule a Demo” form on this page only to Formspree (or 
 
 ## Constraints
 - Only wire up the existing CTA form on this page.
+
 - Do not alter layout, styling, or other sections.
 - Keep the current field names and labels.
 - Works with the existing React/Next.js form component.

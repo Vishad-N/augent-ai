@@ -6,6 +6,8 @@
 
 - [Home](https://www.augent.ai/): Platform overview, solutions, core capabilities, use cases, architecture and philosophy.
 
+- [Intelligent Document Processing](https://www.augent.ai/intelligent-document-processing): How AuGENT's agentic IDP framework ingests, classifies, extracts, validates and delivers ERP-ready document data; impact figures, industry use cases and market context.
+
 ## Legal
 
 - [Privacy Policy](https://www.augent.ai/privacy-policy): What personal data the website collects, how it is used and shared, retention, and user rights.

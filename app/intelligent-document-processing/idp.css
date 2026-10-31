@@ -1,0 +1,359 @@
+/* Intelligent Document Processing page. Uses the site's gold / dark tokens. */
+
+/* Light, purple-on-white opening (matches the live page) */
+:root {
+  --purple-ink: #2e013c;
+}
+
+.idp-top {
+  padding-top: calc(var(--header-h) + 3.5rem);
+  padding-bottom: 2rem;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(123, 42, 138, 0.07) 0 2px, transparent 3px) 0 0 / 120px 120px,
+    radial-gradient(circle at 70% 60%, rgba(123, 42, 138, 0.07) 0 2px, transparent 3px) 40px 30px / 160px 160px,
+    var(--augent-white);
+  color: var(--purple-ink);
+}
+
+.idp-page-title {
+  margin-bottom: 2rem;
+  font-size: 4.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--purple-ink);
+}
+
+.idp-intro {
+  padding-top: 3rem;
+  padding-bottom: 5rem;
+  background: var(--augent-white);
+  color: var(--purple-ink);
+}
+
+.idp-intro-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: center;
+  gap: 3rem;
+}
+
+.idp-hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.idp-eyebrow {
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--augent-gold-60);
+}
+
+.idp-hero-title {
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: pre-line;
+  color: var(--purple-ink);
+}
+
+.idp-hero-text {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: #2b1d31;
+}
+
+.idp-hero-buttons {
+  margin-top: 1rem;
+}
+
+/* Real assets exported from the live page */
+.idp-top {
+  position: relative;
+  overflow: hidden;
+}
+
+.idp-top-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.idp-top .container {
+  position: relative;
+  z-index: 1;
+}
+
+.idp-hero-lottie {
+  width: 100%;
+  aspect-ratio: 2.4 / 1;
+}
+
+.idp-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Steps tabs */
+.idp-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+}
+
+.idp-tabs-art {
+  aspect-ratio: 1 / 1;
+  max-height: 34rem;
+  width: 100%;
+}
+
+.idp-tabs-lottie {
+  width: 100%;
+  height: 100%;
+}
+
+.idp-tabs-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.idp-tab {
+  border-bottom: 1px solid rgba(46, 1, 60, 0.15);
+}
+
+.idp-tab-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--purple-ink);
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.idp-tab.is-active .idp-tab-head,
+.idp-tab-head:hover {
+  opacity: 1;
+}
+
+.idp-tab-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0 0 1.5rem 3.25rem;
+}
+
+.idp-step-num {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--augent-gold-60);
+}
+
+.idp-step-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.idp-step-text {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #2b1d31;
+}
+
+/* Impact */
+.idp-impact {
+  background: var(--augent-black);
+  color: var(--augent-white);
+}
+
+.idp-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.idp-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  background: var(--augent-purple-70);
+  border: 1px solid rgba(245, 188, 39, 0.18);
+  border-radius: 16px;
+}
+
+.idp-stat-value {
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--augent-brand-gold);
+}
+
+.idp-stat-label {
+  font-size: 1.1rem;
+}
+
+.idp-deployed {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--augent-neutral-lighter);
+}
+
+.idp-qual-heading {
+  margin-top: 5rem;
+}
+
+.idp-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.idp-compare-col {
+  padding: 2rem;
+  background: var(--augent-purple-70);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+}
+
+.idp-compare-col.with {
+  border-color: var(--augent-brand-gold);
+}
+
+.idp-compare-title {
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.idp-compare-col.with .idp-compare-title {
+  color: var(--augent-brand-gold);
+}
+
+.idp-compare-col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.idp-compare-col li {
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.45;
+}
+
+.idp-compare-col li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--augent-neutral);
+}
+
+.idp-compare-col.with li::before {
+  background: var(--augent-brand-gold);
+}
+
+/* Market */
+.idp-market {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.idp-market-card {
+  padding: 2rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--augent-ink);
+  background: var(--augent-purple-10);
+  border-radius: 16px;
+}
+
+/* CTA copy (paragraph variant of the home CTA) */
+.cta-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.cta-copy-emphasis {
+  font-weight: 600;
+}
+
+@media (max-width: 991px) {
+  .idp-page-title {
+    font-size: 3rem;
+  }
+  .idp-intro-grid {
+    grid-template-columns: 1fr;
+  }
+  .idp-hero-title {
+    font-size: 2.75rem;
+  }
+  .idp-tabs {
+    grid-template-columns: 1fr;
+  }
+  .idp-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .idp-page-title {
+    font-size: 2.1rem;
+  }
+  .idp-hero-title {
+    font-size: 2.1rem;
+  }
+  .idp-hero-text {
+    font-size: 1.05rem;
+  }
+  .idp-compare,
+  .idp-market {
+    grid-template-columns: 1fr;
+  }
+  .idp-stat-value {
+    font-size: 2.25rem;
+  }
+  .idp-qual-heading {
+    margin-top: 3rem;
+  }
+  .idp-market-card {
+    font-size: 1.05rem;
+  }
+}

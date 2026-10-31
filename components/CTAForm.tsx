@@ -17,7 +17,7 @@ const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
  * JSON to the endpoint in NEXT_PUBLIC_FORMSPREE_ENDPOINT, which stores the lead
  * and sends the email notification.
  */
-export default function CTAForm() {
+export default function CTAForm({ copy }: { copy?: { heading: string; paragraphs: string[]; emphasis?: string } } = {}) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
@@ -70,15 +70,24 @@ export default function CTAForm() {
         >
           <Reveal className="cta-left">
             <SignalLine onDark />
-            <h2 className="cta-heading">{ctaSection.heading}</h2>
-            <ul className="cta-bullets" style={{ listStyle: "none", margin: 0, padding: 0 }}>
-              {ctaPoints.map((p) => (
-                <li key={p} className="cta-bullet">
-                  <img src={ctaSection.tick} alt="" />
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ul>
+            <h2 className="cta-heading">{copy?.heading ?? ctaSection.heading}</h2>
+            {copy ? (
+              <div className="cta-copy">
+                {copy.paragraphs.map((p) => (
+                  <p key={p}>{p}</p>
+                ))}
+                {copy.emphasis && <p className="cta-copy-emphasis">{copy.emphasis}</p>}
+              </div>
+            ) : (
+              <ul className="cta-bullets" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                {ctaPoints.map((p) => (
+                  <li key={p} className="cta-bullet">
+                    <img src={ctaSection.tick} alt="" />
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Reveal>
 
           <Reveal delay={0.1} className="form-block" y={24}>
